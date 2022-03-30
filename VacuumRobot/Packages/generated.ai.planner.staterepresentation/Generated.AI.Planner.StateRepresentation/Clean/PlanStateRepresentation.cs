@@ -30,7 +30,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         public string Label => $"State{Entity}";
     }
 
-    public static class TraitArrayIndex<T> where T : struct, ITrait
+    public static class TraitArrayIndex<T> where T : unmanaged, ITrait
     {
         public static readonly int Index = -1;
 
@@ -333,7 +333,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
             };
         }
 
-        public void AddObject(NativeArray<ComponentType> types, out TraitBasedObject traitBasedObject, TraitBasedObjectId objectId, FixedString64 name = default)
+        public void AddObject(NativeArray<ComponentType> types, out TraitBasedObject traitBasedObject, TraitBasedObjectId objectId, FixedString64Bytes name = default)
         {
             traitBasedObject = TraitBasedObject.Default;
 #if DEBUG
@@ -374,7 +374,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
             TraitBasedObjects.Add(traitBasedObject);
         }
 
-        public void AddObject(NativeArray<ComponentType> types, out TraitBasedObject traitBasedObject, out TraitBasedObjectId objectId, FixedString64 name = default)
+        public void AddObject(NativeArray<ComponentType> types, out TraitBasedObject traitBasedObject, out TraitBasedObjectId objectId, FixedString64Bytes name = default)
         {
             objectId = new TraitBasedObjectId() { Id = ObjectId.GetNext() };
             AddObject(types, out traitBasedObject, objectId, name);
@@ -432,7 +432,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         }
 
 
-        public TTrait GetTraitOnObject<TTrait>(TraitBasedObject traitBasedObject) where TTrait : struct, ITrait
+        public TTrait GetTraitOnObject<TTrait>(TraitBasedObject traitBasedObject) where TTrait : unmanaged, ITrait
         {
             var traitBasedObjectTraitIndex = TraitArrayIndex<TTrait>.Index;
             if (traitBasedObjectTraitIndex == -1)
@@ -445,7 +445,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
             return GetBuffer<TTrait>()[traitBufferIndex];
         }
 
-        public bool HasTraitOnObject<TTrait>(TraitBasedObject traitBasedObject) where TTrait : struct, ITrait
+        public bool HasTraitOnObject<TTrait>(TraitBasedObject traitBasedObject) where TTrait : unmanaged, ITrait
         {
             var traitBasedObjectTraitIndex = TraitArrayIndex<TTrait>.Index;
             if (traitBasedObjectTraitIndex == -1)
@@ -455,7 +455,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
             return traitBufferIndex != TraitBasedObject.Unset;
         }
 
-        public void SetTraitOnObject<TTrait>(TTrait trait, ref TraitBasedObject traitBasedObject) where TTrait : struct, ITrait
+        public void SetTraitOnObject<TTrait>(TTrait trait, ref TraitBasedObject traitBasedObject) where TTrait : unmanaged, ITrait
         {
             var objectIndex = GetTraitBasedObjectIndex(traitBasedObject);
             if (objectIndex == -1)
@@ -478,7 +478,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
             }
         }
 
-        public bool RemoveTraitOnObject<TTrait>(ref TraitBasedObject traitBasedObject) where TTrait : struct, ITrait
+        public bool RemoveTraitOnObject<TTrait>(ref TraitBasedObject traitBasedObject) where TTrait : unmanaged, ITrait
         {
             var objectTraitIndex = TraitArrayIndex<TTrait>.Index;
             var traitBuffer = GetBuffer<TTrait>();
@@ -543,7 +543,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         }
 
 
-        public TTrait GetTraitOnObjectAtIndex<TTrait>(int traitBasedObjectIndex) where TTrait : struct, ITrait
+        public TTrait GetTraitOnObjectAtIndex<TTrait>(int traitBasedObjectIndex) where TTrait : unmanaged, ITrait
         {
             var traitBasedObjectTraitIndex = TraitArrayIndex<TTrait>.Index;
             if (traitBasedObjectTraitIndex == -1)
@@ -557,7 +557,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
             return GetBuffer<TTrait>()[traitBufferIndex];
         }
 
-        public void SetTraitOnObjectAtIndex<T>(T trait, int traitBasedObjectIndex) where T : struct, ITrait
+        public void SetTraitOnObjectAtIndex<T>(T trait, int traitBasedObjectIndex) where T : unmanaged, ITrait
         {
             var traitBasedObjectTraitIndex = TraitArrayIndex<T>.Index;
             if (traitBasedObjectTraitIndex == -1)
@@ -579,7 +579,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
             }
         }
 
-        public bool RemoveTraitOnObjectAtIndex<TTrait>(int traitBasedObjectIndex) where TTrait : struct, ITrait
+        public bool RemoveTraitOnObjectAtIndex<TTrait>(int traitBasedObjectIndex) where TTrait : unmanaged, ITrait
         {
             var objectTraitIndex = TraitArrayIndex<TTrait>.Index;
             var traitBuffer = GetBuffer<TTrait>();
@@ -709,7 +709,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         }
 
 
-        DynamicBuffer<T> GetBuffer<T>() where T : struct, ITrait
+        DynamicBuffer<T> GetBuffer<T>() where T : unmanaged, ITrait
         {
             var index = TraitArrayIndex<T>.Index;
             switch (index)
@@ -955,7 +955,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
 
         [NativeDisableContainerSafetyRestriction,ReadOnly] ObjectCorrespondence m_ObjectCorrespondence;
 
-        public StateDataContext(JobComponentSystem system, EntityArchetype stateArchetype)
+        public StateDataContext(SystemBase system, EntityArchetype stateArchetype)
         {
             EntityCommandBuffer = default;
             TraitBasedObjects = system.GetBufferFromEntity<TraitBasedObject>(true);
@@ -1029,7 +1029,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
     }
 
     [DisableAutoCreation, AlwaysUpdateSystem]
-    public class StateManager : JobComponentSystem, ITraitBasedStateManager<TraitBasedObject, StateEntityKey, StateData, StateDataContext>
+    public partial class StateManager : SystemBase, ITraitBasedStateManager<TraitBasedObject, StateEntityKey, StateData, StateDataContext>
     {
         public new EntityManager EntityManager
         {
@@ -1072,6 +1072,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         List<EntityCommandBuffer> m_EntityCommandBuffers;
         EntityArchetype m_StateArchetype;
         bool m_EntityTransactionActive = false;
+        int m_LastClearedFrame = 0;
 
         protected override void OnCreate()
         {
@@ -1095,6 +1096,15 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
 
         public EntityCommandBuffer GetEntityCommandBuffer()
         {
+            //todo determine a dedicated point to dispose of aggregated ECBs
+            var jobDependencyHandle = ExclusiveEntityTransaction.EntityManager.ExclusiveEntityTransactionDependency;
+            if (jobDependencyHandle.IsCompleted && UnityEngine.Time.frameCount != m_LastClearedFrame)
+            {
+                jobDependencyHandle.Complete();
+                ClearECBs();
+                m_LastClearedFrame = UnityEngine.Time.frameCount;
+            }
+
             var ecb = new EntityCommandBuffer(Allocator.Persistent);
             m_EntityCommandBuffers.Add(ecb);
             return ecb;
@@ -1137,7 +1147,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
             return new StateEntityKey { Entity = copyStateEntity, HashCode = stateData.GetHashCode()};
         }
 
-        protected override JobHandle OnUpdate(JobHandle inputDeps)
+        protected override void OnUpdate()
         {
             var jobDependencyHandle = ExclusiveEntityTransaction.EntityManager.ExclusiveEntityTransactionDependency;
             if (jobDependencyHandle.IsCompleted)
@@ -1145,8 +1155,6 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
                 jobDependencyHandle.Complete();
                 ClearECBs();
             }
-
-            return inputDeps;
         }
 
         void ClearECBs()

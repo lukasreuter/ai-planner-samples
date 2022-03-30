@@ -1,0 +1,27 @@
+{
+    "name": "Generated.AI.Planner.StateRepresentation",
+    "references": [
+        "Unity.Semantic.Traits",
+        "Generated.Semantic.Traits",
+        "Unity.AI.Planner",
+        "Unity.Entities",
+        "Unity.Collections"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "SEMANTIC_TRAITS_GENERATED"
+    ],
+    "versionDefines": [
+        {
+            "name": "generated.semantic.traits",
+            "expression": "0.0",
+            "define": "SEMANTIC_TRAITS_GENERATED"
+        }
+    ],
+    "noEngineReferences": false
+}

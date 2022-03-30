@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44112793, g: 0.48989046, b: 0.5699637, a: 1}
+  m_IndirectSpecularColor: {r: 0.44112822, g: 0.4898908, b: 0.5699647, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ControlledBy: 1
+  m_SensorDelay: 1
 --- !u!4 &47606519
 Transform:
   m_ObjectHideFlags: 0
@@ -615,6 +616,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 4.588e-41, y: 9.4e-44, z: 0, w: 2.0326596e+25}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &367999486
@@ -707,6 +709,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 4.6226e-41, y: 1.02e-43, z: 3.2952e-41, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &705507995
@@ -1165,7 +1168,7 @@ ParticleSystem:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2583458445774505351}
-  serializedVersion: 6
+  serializedVersion: 7
   lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
@@ -4737,19 +4740,20 @@ ParticleSystem:
     range: {x: 0, y: 1}
   CollisionModule:
     enabled: 0
-    serializedVersion: 3
+    serializedVersion: 4
     type: 0
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
     multiplyColliderForceByParticleSpeed: 0
     multiplyColliderForceByCollisionAngle: 1
-    plane0: {fileID: 0}
-    plane1: {fileID: 0}
-    plane2: {fileID: 0}
-    plane3: {fileID: 0}
-    plane4: {fileID: 0}
-    plane5: {fileID: 0}
+    m_Planes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     m_Dampen:
       serializedVersion: 2
       minMaxState: 0
@@ -4923,17 +4927,20 @@ ParticleSystem:
     interiorCollisions: 0
   TriggerModule:
     enabled: 0
-    collisionShape0: {fileID: 0}
-    collisionShape1: {fileID: 0}
-    collisionShape2: {fileID: 0}
-    collisionShape3: {fileID: 0}
-    collisionShape4: {fileID: 0}
-    collisionShape5: {fileID: 0}
+    serializedVersion: 2
     inside: 1
     outside: 0
     enter: 0
     exit: 0
+    colliderQueryMode: 0
     radiusScale: 1
+    primitives:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   SubModule:
     serializedVersion: 2
     enabled: 0
@@ -5915,7 +5922,7 @@ MonoBehaviour:
     - m_Filters:
       - id: 0
       m_Quantifier: 0
-      m_QuantifierLimit: 0
+      m_QuantifierLimit: 1
       m_QuantifierScorer:
         id: 1
       m_RequiredTraits:
@@ -5923,9 +5930,10 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 11e92cabadf1b8748910960dc9633039, type: 2}
       m_ProhibitedTraits:
         m_Traits: []
-    - m_Filters: []
+    - m_Filters:
+      - id: 2
       m_Quantifier: 0
-      m_QuantifierLimit: 0
+      m_QuantifierLimit: 1
       m_QuantifierScorer:
         id: 1
       m_RequiredTraits:
@@ -5942,6 +5950,11 @@ MonoBehaviour:
         m_Source: {fileID: 47606526}
     00000001:
       type: {class: , ns: , asm: }
+    00000002:
+      type: {class: DistanceFilter, ns: Unity.Semantic.Traits.Queries, asm: Unity.Semantic.Traits.Queries}
+      data:
+        m_Radius: 0
+        m_Source: {fileID: 0}
 --- !u!114 &4655835017648887278
 MonoBehaviour:
   m_ObjectHideFlags: 0

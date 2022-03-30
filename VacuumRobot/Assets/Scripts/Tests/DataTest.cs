@@ -51,9 +51,11 @@ namespace Unity.AI.Planner.DataTests
         public Entity GeneratedEntity;
     }
 
-    class TestJobComponentSystem : JobComponentSystem
+    class TestJobComponentSystem : ComponentSystem
     {
-        protected override JobHandle OnUpdate(JobHandle inputDeps) => inputDeps;
+        protected override void OnUpdate()
+        {
+        }
     }
 
     [BurstCompile]

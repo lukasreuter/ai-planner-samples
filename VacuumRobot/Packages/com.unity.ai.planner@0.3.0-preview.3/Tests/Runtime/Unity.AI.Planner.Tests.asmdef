@@ -1,0 +1,27 @@
+{
+    "name": "Unity.AI.Planner.Tests",
+    "references": [
+        "Unity.AI.Planner",
+        "Unity.Entities",
+        "Unity.PerformanceTesting",
+        "Unity.Collections",
+        "Unity.Jobs",
+        "Unity.Mathematics",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Burst"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

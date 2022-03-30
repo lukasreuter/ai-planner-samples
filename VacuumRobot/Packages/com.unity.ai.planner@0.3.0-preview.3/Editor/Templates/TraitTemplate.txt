@@ -1,0 +1,85 @@
+using System;
+using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.AI.Planner.Traits;
+{{- if include_enums }}
+using Generated.Semantic.Traits.Enums;
+{{- end }}
+
+namespace {{ namespace }}
+{
+    [Serializable]
+    public struct {{ name }} : ITrait, IBufferElementData, IEquatable<{{ name }}>
+    {
+        {{- for field in fields }}
+        public const string Field{{ field.field_name }} = "{{ field.field_name }}";
+        {{- end }}
+
+        {{- for field in fields }}
+        public {{ if field.field_type | string.contains "GameObject" -}}TraitBasedObjectId{{- else -}}{{ field.field_type }}{{- end }} {{ field.field_name }};
+        {{- end }}
+
+        public void SetField(string fieldName, object value)
+        {
+        {{- if !fields.empty? }}
+            switch (fieldName)
+            {
+            {{- for field in fields }}
+                case nameof({{ field.field_name }}):
+                {{- if (field.field_type | string.contains ".Enums.") }}
+                    {{ field.field_name }} = ({{ field.field_type }})Enum.ToObject(typeof({{ field.field_type }}), value);
+                {{- else }}
+                    {{ field.field_name }} = ({{ field.field_type }})value;
+                {{- end }}
+                    break;
+            {{- end }}
+                default:
+                    throw new ArgumentException($"Field \"{fieldName}\" does not exist on trait {{ name }}.");
+            }
+        {{- end }}
+        }
+
+        public object GetField(string fieldName)
+        {
+        {{- if !fields.empty? }}
+            switch (fieldName)
+            {
+            {{- for field in fields }}
+                case nameof({{ field.field_name }}):
+                    return {{ field.field_name }};
+            {{- end }}
+                default:
+                    throw new ArgumentException($"Field \"{fieldName}\" does not exist on trait {{ name }}.");
+            }
+        {{- else }}
+            throw new ArgumentException("No fields exist on trait {{ name }}.");
+        {{- end }}
+        }
+
+        public bool Equals({{ name }} other)
+        {
+        {{- if fields.empty? }}
+            return true;
+        {{- else }}
+        {{ for field in fields }}
+            {{- if for.index == 0 }}    return {{ else }} && {{ end }}
+            {{- if field.field_type | string.contains "NativeString" }}
+                    {{- field.field_name }}.Equals(other.{{ field.field_name }})
+            {{- else }}
+                    {{- field.field_name }} == other.{{ field.field_name }}
+            {{- end }}
+            {{- end }};
+        {{- end }}
+        }
+
+        public override string ToString()
+        {
+        {{- if fields.empty? }}
+            return $"{{ name }}";
+        {{- else }}
+            return $"{{ name }}{{ for field in fields }}\n  {{ field.field_name }}: { {{- field.field_name -}} }{{ end -}}";
+        {{- end }}
+        }
+    }
+}

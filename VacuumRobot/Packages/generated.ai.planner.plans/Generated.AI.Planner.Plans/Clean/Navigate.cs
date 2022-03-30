@@ -182,12 +182,12 @@ namespace Generated.AI.Planner.Plans.Clean
         }
 
         
-        public static T GetMoverTrait<T>(StateData state, ActionKey action) where T : struct, ITrait
+        public static T GetMoverTrait<T>(StateData state, ActionKey action) where T : unmanaged, ITrait
         {
             return state.GetTraitOnObjectAtIndex<T>(action[k_MoverIndex]);
         }
         
-        public static T GetDestinationTrait<T>(StateData state, ActionKey action) where T : struct, ITrait
+        public static T GetDestinationTrait<T>(StateData state, ActionKey action) where T : unmanaged, ITrait
         {
             return state.GetTraitOnObjectAtIndex<T>(action[k_DestinationIndex]);
         }

@@ -1,0 +1,25 @@
+{
+    "name": "Unity.AI.Planner.Editor",
+    "references": [
+        "Unity.PlayableGraphVisualizer.Editor",
+        "Unity.AI.Planner",
+        "Unity.Entities",
+        "Unity.Semantic.Traits",
+        "Unity.Semantic.Traits.Editor",
+        "Unity.DynamicStructs",
+        "Unity.Collections",
+        "Unity.Semantic.Traits.Queries",
+        "Unity.Semantic.Traits.Queries.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

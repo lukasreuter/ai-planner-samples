@@ -1,0 +1,30 @@
+{
+    "name": "Unity.AI.Planner.Editor.Tests",
+    "references": [
+        "Unity.AI.Planner",
+        "Unity.AI.Planner.Editor",
+        "Unity.Entities",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Semantic.Traits",
+        "Unity.DynamicStructs",
+        "Generated.AI.Planner.StateRepresentation",
+        "Generated.Semantic.Traits",
+        "Unity.Semantic.Traits.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

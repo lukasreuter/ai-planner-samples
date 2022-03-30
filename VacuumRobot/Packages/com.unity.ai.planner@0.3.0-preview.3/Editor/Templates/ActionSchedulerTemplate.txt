@@ -1,0 +1,102 @@
+using System;
+using Unity.AI.Planner;
+using Unity.AI.Planner.Traits;
+using Unity.AI.Planner.Jobs;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Jobs;
+using {{ state_representation_qualifier }};
+using {{ state_representation_qualifier }}.{{ plan_name }};
+
+namespace {{ namespace }}
+{
+    public struct ActionScheduler :
+        ITraitBasedActionScheduler<TraitBasedObject, StateEntityKey, StateData, StateDataContext, StateManager, ActionKey>
+    {
+        {{- for action in actions }}
+        public static readonly Guid {{action.name}}Guid = Guid.NewGuid();
+        {{- end}}
+
+        // Input
+        public NativeList<StateEntityKey> UnexpandedStates { get; set; }
+        public StateManager StateManager { get; set; }
+
+        // Output
+        NativeQueue<StateTransitionInfoPair<StateEntityKey, ActionKey, StateTransitionInfo>> IActionScheduler<StateEntityKey, StateData, StateDataContext, StateManager, ActionKey>.CreatedStateInfo
+        {
+            set => m_CreatedStateInfo = value;
+        }
+
+        NativeQueue<StateTransitionInfoPair<StateEntityKey, ActionKey, StateTransitionInfo>> m_CreatedStateInfo;
+
+        struct PlaybackECB : IJob
+        {
+            public ExclusiveEntityTransaction ExclusiveEntityTransaction;
+
+            [ReadOnly]
+            public NativeList<StateEntityKey> UnexpandedStates;
+            public NativeQueue<StateTransitionInfoPair<StateEntityKey, ActionKey, StateTransitionInfo>> CreatedStateInfo;
+
+            {{- for action in actions }}
+            public EntityCommandBuffer {{action.name}}ECB;
+            {{- end}}
+
+            public void Execute()
+            {
+                // Playback entity changes and output state transition info
+                var entityManager = ExclusiveEntityTransaction;
+
+                {{- for action in actions }}
+
+                {{action.name}}ECB.Playback(entityManager);
+                for (int i = 0; i < UnexpandedStates.Length; i++)
+                {
+                    var stateEntity = UnexpandedStates[i].Entity;
+                    var {{action.name}}Refs = entityManager.GetBuffer<{{action.name}}FixupReference>(stateEntity);
+                    for (int j = 0; j < {{action.name}}Refs.Length; j++)
+                        CreatedStateInfo.Enqueue({{action.name}}Refs[j].TransitionInfo);
+                    entityManager.RemoveComponent(stateEntity, typeof({{action.name}}FixupReference));
+                }
+                {{- end}}
+            }
+        }
+
+        public JobHandle Schedule(JobHandle inputDeps)
+        {
+            var entityManager = StateManager.ExclusiveEntityTransaction.EntityManager;
+
+            {{- for action in actions }}
+            var {{action.name}}DataContext = StateManager.StateDataContext;
+            var {{action.name}}ECB = StateManager.GetEntityCommandBuffer();
+            {{action.name}}DataContext.EntityCommandBuffer = {{action.name}}ECB.AsParallelWriter();
+            {{- end}}
+
+            var allActionJobs = new NativeArray<JobHandle>({{ num_actions + 1 }}, Allocator.TempJob)
+            {
+                {{- for action in actions }}
+                [{{for.index}}] = new {{action.name}}({{action.name}}Guid, UnexpandedStates, {{action.name}}DataContext).Schedule(UnexpandedStates, 0, inputDeps),
+                {{- end}}
+                [{{ num_actions }}] = entityManager.ExclusiveEntityTransactionDependency
+            };
+
+            var allActionJobsHandle = JobHandle.CombineDependencies(allActionJobs);
+            allActionJobs.Dispose();
+
+            // Playback entity changes and output state transition info
+            var playbackJob = new PlaybackECB()
+            {
+                ExclusiveEntityTransaction = StateManager.ExclusiveEntityTransaction,
+                UnexpandedStates = UnexpandedStates,
+                CreatedStateInfo = m_CreatedStateInfo,
+                {{- for action in actions }}
+                {{action.name}}ECB = {{action.name}}ECB,
+                {{- end}}
+            };
+
+            var playbackJobHandle = playbackJob.Schedule(allActionJobsHandle);
+            entityManager.ExclusiveEntityTransactionDependency = playbackJobHandle;
+
+            return playbackJobHandle;
+        }
+    }
+}

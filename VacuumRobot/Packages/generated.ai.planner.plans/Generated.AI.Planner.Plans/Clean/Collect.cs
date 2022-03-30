@@ -170,12 +170,12 @@ namespace Generated.AI.Planner.Plans.Clean
         }
 
         
-        public static T GetRobotTrait<T>(StateData state, ActionKey action) where T : struct, ITrait
+        public static T GetRobotTrait<T>(StateData state, ActionKey action) where T : unmanaged, ITrait
         {
             return state.GetTraitOnObjectAtIndex<T>(action[k_RobotIndex]);
         }
         
-        public static T GetDirtTrait<T>(StateData state, ActionKey action) where T : struct, ITrait
+        public static T GetDirtTrait<T>(StateData state, ActionKey action) where T : unmanaged, ITrait
         {
             return state.GetTraitOnObjectAtIndex<T>(action[k_DirtIndex]);
         }
