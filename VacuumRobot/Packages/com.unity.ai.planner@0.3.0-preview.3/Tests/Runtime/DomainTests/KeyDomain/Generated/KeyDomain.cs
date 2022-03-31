@@ -95,8 +95,7 @@ namespace KeyDomain
         }
     }
 
-#warning should implement Equals
-    struct TraitBasedObject : ITraitBasedObject
+    struct TraitBasedObject : ITraitBasedObject, IEquatable<TraitBasedObject>
     {
         public int Length => 6;
 
@@ -283,6 +282,30 @@ namespace KeyDomain
             }
 
             return true;
+        }
+
+        public bool Equals(TraitBasedObject other)
+        {
+            return ColoredIndex == other.ColoredIndex && CarrierIndex == other.CarrierIndex && CarriableIndex == other.CarriableIndex && LocalizedIndex == other.LocalizedIndex && LockableIndex == other.LockableIndex && EndIndex == other.EndIndex;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TraitBasedObject other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = ColoredIndex.GetHashCode();
+                hashCode = (hashCode * 397) ^ CarrierIndex.GetHashCode();
+                hashCode = (hashCode * 397) ^ CarriableIndex.GetHashCode();
+                hashCode = (hashCode * 397) ^ LocalizedIndex.GetHashCode();
+                hashCode = (hashCode * 397) ^ LockableIndex.GetHashCode();
+                hashCode = (hashCode * 397) ^ EndIndex.GetHashCode();
+                return hashCode;
+            }
         }
     }
 
