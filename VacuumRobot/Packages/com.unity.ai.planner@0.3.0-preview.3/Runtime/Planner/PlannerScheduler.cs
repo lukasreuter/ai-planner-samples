@@ -9,7 +9,7 @@ using UnityEngine.Assertions;
 
 namespace Unity.AI.Planner
 {
-    class PlannerScheduler<TStateKey, TActionKey, TStateManager, TStateData, TStateDataContext, TActionScheduler, TCumulativeRewardEstimator, TTerminationEvaluator, TDestroyStatesScheduler> : IPlannerScheduler, IDisposable
+    internal class PlannerScheduler<TStateKey, TActionKey, TStateManager, TStateData, TStateDataContext, TActionScheduler, TCumulativeRewardEstimator, TTerminationEvaluator, TDestroyStatesScheduler> : IPlannerScheduler, IDisposable
         where TStateKey : unmanaged, IEquatable<TStateKey>
         where TActionKey : unmanaged, IEquatable<TActionKey>
         where TStateManager : IStateManager<TStateKey, TStateData, TStateDataContext>
@@ -258,7 +258,7 @@ namespace Unity.AI.Planner
         }
 
         [BurstCompile]
-        struct CopyPlanDataJob : IJobParallelForDefer
+        internal struct CopyPlanDataJob : IJobParallelForDefer
         {
             [ReadOnly] public NativeArray<TStateKey> StatesToCopy;
             [ReadOnly] public NativeHashMap<TStateKey, byte> StatesToCopyLookup;

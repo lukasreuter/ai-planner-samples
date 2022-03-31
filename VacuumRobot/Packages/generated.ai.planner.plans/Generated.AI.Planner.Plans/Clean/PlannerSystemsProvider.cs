@@ -5,10 +5,11 @@ using Unity.AI.Planner.Jobs;
 using Unity.Entities;
 using Unity.Jobs;
 using Generated.AI.Planner.StateRepresentation.Clean;
-//using Generated.AI.Planner.Plans.Clean;
 
 [assembly: RegisterGenericJobType(typeof(EvaluateNewStatesJob<StateEntityKey, StateData, StateDataContext,
     global::AI.Planner.Actions.Clean.CustomVacuumRobotHeuristic, Generated.AI.Planner.Plans.Clean.TerminationEvaluator>))]
+[assembly: RegisterGenericJobType(typeof(PlannerScheduler<StateEntityKey, ActionKey, StateManager, StateData, StateDataContext,
+    Generated.AI.Planner.Plans.Clean.ActionScheduler, global::AI.Planner.Actions.Clean.CustomVacuumRobotHeuristic, Generated.AI.Planner.Plans.Clean.TerminationEvaluator, DestroyStatesJobScheduler>.CopyPlanDataJob))]
 
 namespace Generated.AI.Planner.Plans.Clean
 {
