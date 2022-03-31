@@ -37,12 +37,12 @@ namespace Generated.AI.Planner.Plans.Clean
             public NativeQueue<StateTransitionInfoPair<StateEntityKey, ActionKey, StateTransitionInfo>> CreatedStateInfo;
             public EntityCommandBuffer CollectECB;
             public EntityCommandBuffer NavigateECB;
-            public EntityCommandBuffer removeECB;
 
             public void Execute()
             {
                 // Playback entity changes and output state transition info
                 var entityManager = ExclusiveEntityTransaction;
+                using var removeECB = new EntityCommandBuffer(Allocator.Temp);
 
                 CollectECB.Playback(entityManager);
                 for (int i = 0; i < UnexpandedStates.Length; i++)
@@ -97,7 +97,6 @@ namespace Generated.AI.Planner.Plans.Clean
                 CreatedStateInfo = m_CreatedStateInfo,
                 CollectECB = CollectECB,
                 NavigateECB = NavigateECB,
-                removeECB = StateManager.GetEntityCommandBuffer(),
             };
 
             var playbackJobHandle = playbackJob.Schedule(allActionJobsHandle);
