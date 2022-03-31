@@ -3,18 +3,19 @@ using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Unity.AI.Planner;
-using Unity.AI.Planner.Traits;
 using Unity.AI.Planner.Jobs;
+using Unity.AI.Planner.Traits;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 using Unity.Jobs;
 using PlanningAgent = Unity.AI.Planner.Traits.PlanningAgent;
-using Generated.AI.Planner.StateRepresentation.Clean;
 
-[assembly: RegisterGenericJobType(typeof(GraphExpansionJob<StateEntityKey, StateData, StateDataContext, ActionKey>))]
-[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.BackpropagationJob<
-    Generated.AI.Planner.StateRepresentation.Clean.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.GraphExpansionJob<Generated.AI.Planner.StateRepresentation.Clean.StateEntityKey, Generated.AI.Planner.StateRepresentation.Clean.StateData, Generated.AI.Planner.StateRepresentation.Clean.StateDataContext, ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.BackpropagationJob<Generated.AI.Planner.StateRepresentation.Clean.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.QueueToListJob<Generated.AI.Planner.StateRepresentation.Clean.StateEntityKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.SelectionJob<Generated.AI.Planner.StateRepresentation.Clean.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.PrepareForExpansionJob<Generated.AI.Planner.StateRepresentation.Clean.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
 
 namespace Generated.AI.Planner.StateRepresentation.Clean
 {
