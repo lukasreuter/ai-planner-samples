@@ -549,6 +549,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         public TTrait GetTraitOnObjectAtIndex<TTrait>(int traitBasedObjectIndex) where TTrait : unmanaged, ITrait
         {
             var traitBasedObjectTraitIndex = TraitArrayIndex<TTrait>.Index;
+#warning this throws for some reason only under burst
             if (traitBasedObjectTraitIndex == -1)
                 throw new ArgumentException($"Trait {typeof(TTrait)} not supported in this state representation");
 

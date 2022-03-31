@@ -241,10 +241,18 @@ namespace UnityEditor.Semantic.Traits.Queries.UI
             headerContainer.AddToClassList(k_GroupHeaderUssClassName);
             queryBLocks.Add(headerContainer);
 
-            var quantifier = new EnumField(ConditionalQuantifiers.All);
+            var quantifier = new EnumField();
             var quantifierProperty = groupProperty.FindPropertyRelative("m_Quantifier");
             quantifier.BindProperty(quantifierProperty);
-            quantifier.RegisterValueChangedCallback(e => RefreshQueryBlocks());
+            quantifier.RegisterValueChangedCallback(e =>
+            {
+                if (!Equals(e.newValue, e.previousValue))
+                {
+                    quantifier.SetValueWithoutNotify(e.newValue);
+#warning fix this assignment/Update, for some reason it causes it to always revert back to All
+                    RefreshQueryBlocks();
+                }
+            });
 
             var quantifierVisualElement = quantifier.Q<VisualElement>(className: EnumField.inputUssClassName);
             quantifierVisualElement.AddToClassList(k_GroupHeaderButtonUssClassName);
