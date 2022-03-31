@@ -6,7 +6,8 @@
         "Unity.AI.Planner",
         "Unity.Entities",
         "Unity.Collections",
-        "Unity.Jobs"
+        "Unity.Jobs",
+        "Unity.Burst"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -33,23 +33,34 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         public string Label => $"State{Entity}";
     }
 
+    public struct TraitIndices
+    {
+        public static readonly int RobotIndex = TypeManager.GetTypeIndex<Robot>();
+        public static readonly int LocationIndex = TypeManager.GetTypeIndex<Location>();
+        public static readonly int DirtIndex = TypeManager.GetTypeIndex<Dirt>();
+        public static readonly int MoveableIndex = TypeManager.GetTypeIndex<Moveable>();
+        public static readonly int PlanningAgentIndex = TypeManager.GetTypeIndex<PlanningAgent>();
+    }
+
     public static class TraitArrayIndex<T> where T : unmanaged, ITrait
     {
-        public static readonly int Index = -1;
+        static readonly int typeIndex = TypeManager.GetTypeIndex<T>();
 
-        static TraitArrayIndex()
+        public static int Index => Get();
+
+        private static int Get()
         {
-            var typeIndex = TypeManager.GetTypeIndex<T>();
-            if (typeIndex == TypeManager.GetTypeIndex<Robot>())
-                Index = 0;
-            else if (typeIndex == TypeManager.GetTypeIndex<Location>())
-                Index = 1;
-            else if (typeIndex == TypeManager.GetTypeIndex<Dirt>())
-                Index = 2;
-            else if (typeIndex == TypeManager.GetTypeIndex<Moveable>())
-                Index = 3;
-            else if (typeIndex == TypeManager.GetTypeIndex<PlanningAgent>())
-                Index = 4;
+            if (typeIndex == TraitIndices.RobotIndex)
+                return 0;
+            else if (typeIndex == TraitIndices.LocationIndex)
+                return 1;
+            else if (typeIndex == TraitIndices.DirtIndex)
+                return 2;
+            else if (typeIndex == TraitIndices.MoveableIndex)
+                return 3;
+            else if (typeIndex == TraitIndices.PlanningAgentIndex)
+                return 4;
+            return -1;
         }
     }
 
@@ -549,7 +560,6 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         public TTrait GetTraitOnObjectAtIndex<TTrait>(int traitBasedObjectIndex) where TTrait : unmanaged, ITrait
         {
             var traitBasedObjectTraitIndex = TraitArrayIndex<TTrait>.Index;
-#warning this throws for some reason only under burst
             if (traitBasedObjectTraitIndex == -1)
                 throw new ArgumentException($"Trait {typeof(TTrait)} not supported in this state representation");
 

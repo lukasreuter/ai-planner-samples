@@ -33,17 +33,26 @@ namespace {{ namespace }}
         public string Label => $"State{Entity}";
     }
 
+    public struct TraitIndices
+    {
+        {{- for trait in trait_list }}
+        public static readonly int {{ trait.name }}Index = TypeManager.GetTypeIndex<{{ trait.name }}>();
+        {{- end }}
+    }
+
     public static class TraitArrayIndex<T> where T : unmanaged, ITrait
     {
-        public static readonly int Index = -1;
+        static readonly int typeIndex = TypeManager.GetTypeIndex<T>();
 
-        static TraitArrayIndex()
+        public static int Index => Get();
+
+        private static int Get()
         {
-            var typeIndex = TypeManager.GetTypeIndex<T>();
             {{- for trait in trait_list }}
-            {{ if for.index > 0 }}else {{ end }}if (typeIndex == TypeManager.GetTypeIndex<{{ trait.name }}>())
-                Index = {{ for.index }};
+            {{ if for.index > 0 }}else {{ end }}if (typeIndex == TraitIndices.{{ trait.name }}Index)
+                return {{ for.index }};
             {{- end }}
+            return -1;
         }
     }
 
