@@ -5,7 +5,8 @@
         "Generated.Semantic.Traits",
         "Unity.AI.Planner",
         "Unity.Entities",
-        "Unity.Collections"
+        "Unity.Collections",
+        "Unity.Jobs"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

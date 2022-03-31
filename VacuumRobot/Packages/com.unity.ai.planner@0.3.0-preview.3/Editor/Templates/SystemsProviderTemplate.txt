@@ -1,8 +1,13 @@
 using System;
 using Unity.AI.Planner;
 using Unity.AI.Planner.Traits;
+using Unity.AI.Planner.Jobs;
 using Unity.Entities;
+using Unity.Jobs;
 using {{ state_representation_qualifier }}.{{ plan_name }};
+
+[assembly: RegisterGenericJobType(typeof(EvaluateNewStatesJob<StateEntityKey, StateData, StateDataContext,
+    {{ heuristic }}, {{namespace}}.TerminationEvaluator>))]
 
 namespace {{ namespace }}
 {

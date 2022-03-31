@@ -10,6 +10,9 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 using Unity.Jobs;
 using PlanningAgent = Unity.AI.Planner.Traits.PlanningAgent;
+using Generated.AI.Planner.StateRepresentation.Clean;
+
+[assembly: RegisterGenericJobType(typeof(GraphExpansionJob<StateEntityKey, StateData, StateDataContext, ActionKey>))]
 
 namespace Generated.AI.Planner.StateRepresentation.Clean
 {
