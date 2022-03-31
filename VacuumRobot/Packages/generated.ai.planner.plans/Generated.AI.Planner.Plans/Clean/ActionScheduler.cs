@@ -37,6 +37,7 @@ namespace Generated.AI.Planner.Plans.Clean
             public NativeQueue<StateTransitionInfoPair<StateEntityKey, ActionKey, StateTransitionInfo>> CreatedStateInfo;
             public EntityCommandBuffer CollectECB;
             public EntityCommandBuffer NavigateECB;
+            public EntityCommandBuffer removeECB;
 
             public void Execute()
             {
@@ -48,9 +49,10 @@ namespace Generated.AI.Planner.Plans.Clean
                 {
                     var stateEntity = UnexpandedStates[i].Entity;
                     var CollectRefs = entityManager.GetBuffer<CollectFixupReference>(stateEntity);
-                    for (int j = 0; j < CollectRefs.Length; j++)
+                    for (int j = 0; j < CollectRefs.Length; j++) {
                         CreatedStateInfo.Enqueue(CollectRefs[j].TransitionInfo);
-                    entityManager.RemoveComponent(stateEntity, typeof(CollectFixupReference));
+                    }
+                    removeECB.RemoveComponent<CollectFixupReference>(stateEntity);
                 }
 
                 NavigateECB.Playback(entityManager);
@@ -58,10 +60,12 @@ namespace Generated.AI.Planner.Plans.Clean
                 {
                     var stateEntity = UnexpandedStates[i].Entity;
                     var NavigateRefs = entityManager.GetBuffer<NavigateFixupReference>(stateEntity);
-                    for (int j = 0; j < NavigateRefs.Length; j++)
+                    for (int j = 0; j < NavigateRefs.Length; j++) {
                         CreatedStateInfo.Enqueue(NavigateRefs[j].TransitionInfo);
-                    entityManager.RemoveComponent(stateEntity, typeof(NavigateFixupReference));
+                    }
+                    removeECB.RemoveComponent<NavigateFixupReference>(stateEntity);
                 }
+                removeECB.Playback(entityManager);
             }
         }
 
@@ -93,6 +97,7 @@ namespace Generated.AI.Planner.Plans.Clean
                 CreatedStateInfo = m_CreatedStateInfo,
                 CollectECB = CollectECB,
                 NavigateECB = NavigateECB,
+                removeECB = StateManager.GetEntityCommandBuffer(),
             };
 
             var playbackJobHandle = playbackJob.Schedule(allActionJobsHandle);

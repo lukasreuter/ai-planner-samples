@@ -40,6 +40,7 @@ namespace {{ namespace }}
             {{- for action in actions }}
             public EntityCommandBuffer {{action.name}}ECB;
             {{- end}}
+            public EntityCommandBuffer removeECB;
 
             public void Execute()
             {
@@ -53,11 +54,13 @@ namespace {{ namespace }}
                 {
                     var stateEntity = UnexpandedStates[i].Entity;
                     var {{action.name}}Refs = entityManager.GetBuffer<{{action.name}}FixupReference>(stateEntity);
-                    for (int j = 0; j < {{action.name}}Refs.Length; j++)
+                    for (int j = 0; j < {{action.name}}Refs.Length; j++) {
                         CreatedStateInfo.Enqueue({{action.name}}Refs[j].TransitionInfo);
-                    entityManager.RemoveComponent(stateEntity, typeof({{action.name}}FixupReference));
+                    }
+                    removeECB.RemoveComponent<{{action.name}}FixupReference>(stateEntity);
                 }
                 {{- end}}
+                removeECB.Playback(entityManager);
             }
         }
 
@@ -91,6 +94,7 @@ namespace {{ namespace }}
                 {{- for action in actions }}
                 {{action.name}}ECB = {{action.name}}ECB,
                 {{- end}}
+                removeECB = StateManager.GetEntityCommandBuffer(),
             };
 
             var playbackJobHandle = playbackJob.Schedule(allActionJobsHandle);
