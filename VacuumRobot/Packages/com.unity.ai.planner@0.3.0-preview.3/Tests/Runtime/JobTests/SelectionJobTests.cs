@@ -582,7 +582,7 @@ namespace Unity.AI.Planner.Tests.Performance
             allExpandedStates.Dispose();
 
             // Check performance times
-            PerformanceUtility.AssertRange(0.04, 0.15);
+            PerformanceUtility.AssertRange(0.005, 0.15);
         }
 
         [Performance, UnityTest]
@@ -636,7 +636,7 @@ namespace Unity.AI.Planner.Tests.Performance
             allExpandedStates.Dispose();
 
             // Check performance times
-            PerformanceUtility.AssertRange(0.03, 0.10);
+            PerformanceUtility.AssertRange(0.01, 0.10);
         }
 
         [Performance, UnityTest]

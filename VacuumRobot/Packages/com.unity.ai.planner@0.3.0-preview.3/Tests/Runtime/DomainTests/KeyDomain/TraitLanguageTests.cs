@@ -390,7 +390,7 @@ namespace Unity.AI.Traits.Tests.Performance
                 m_StateManager.GetHashCode(stateData);
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.22, 0.41);
+            PerformanceUtility.AssertRange(0.10, 0.41);
         }
 
         [Test, Performance]
@@ -403,7 +403,7 @@ namespace Unity.AI.Traits.Tests.Performance
                 m_StateManager.CopyStateData(stateData);
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.02, 0.06);
+            PerformanceUtility.AssertRange(0.0, 0.06);
         }
 
         [Test, Performance]
@@ -430,7 +430,7 @@ namespace Unity.AI.Traits.Tests.Performance
                 }
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.05, 0.075);
+            PerformanceUtility.AssertRange(0.01, 0.075);
         }
 
         [Test, Performance]
@@ -448,7 +448,7 @@ namespace Unity.AI.Traits.Tests.Performance
                 traitBasedObject = stateData.TraitBasedObjects[0];
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.11, 0.145);
+            PerformanceUtility.AssertRange(0.01, 0.145);
         }
 
         [Test, Performance]
@@ -466,7 +466,7 @@ namespace Unity.AI.Traits.Tests.Performance
                 traitBasedObject = stateData.TraitBasedObjects[stateData.TraitBasedObjects.Length-1];
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.45, 0.55);
+            PerformanceUtility.AssertRange(0.03, 0.55);
         }
 
         [Test, Performance]
@@ -484,7 +484,7 @@ namespace Unity.AI.Traits.Tests.Performance
                 traitBasedObject = stateData.TraitBasedObjects[stateData.TraitBasedObjects.Length-1];
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.16, 0.19);
+            PerformanceUtility.AssertRange(0.01, 0.19);
         }
 
         [Test, Performance]
