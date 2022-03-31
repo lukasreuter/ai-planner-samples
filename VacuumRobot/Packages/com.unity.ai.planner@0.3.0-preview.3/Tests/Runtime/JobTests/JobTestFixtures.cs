@@ -1,10 +1,14 @@
 ﻿using System;
+using KeyDomain;
 using Unity.AI.Planner.Jobs;
+using Unity.AI.Planner.Tests;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Mathematics;
+
+[assembly: RegisterGenericJobType(typeof(EvaluateNewStatesJob<StateEntityKey, StateData, StateDataContext, TestManualOverrideCumulativeRewardEstimator<StateData>, TestManualOverrideTerminationEvaluator<StateData>>))]
 
 namespace Unity.AI.Planner.Tests
 {

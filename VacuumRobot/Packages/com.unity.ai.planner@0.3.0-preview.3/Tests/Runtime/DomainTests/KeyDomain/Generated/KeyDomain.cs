@@ -10,6 +10,18 @@ using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.GraphExpansionJob<KeyDomain.StateEntityKey, KeyDomain.StateData, KeyDomain.StateDataContext, ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.BackpropagationJob<KeyDomain.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.QueueToListJob<KeyDomain.StateEntityKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.QueueToListJob<int>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.SelectionJob<KeyDomain.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.PrepareForExpansionJob<KeyDomain.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.PrepareForExpansionJob<int, int>))]
+[assembly: RegisterGenericJobType(typeof(EvaluateNewStatesJob<KeyDomain.StateEntityKey, KeyDomain.StateData, KeyDomain.StateDataContext,
+    KeyDomain.CumulativeRewardEstimator, KeyDomain.TerminationEvaluator>))]
+[assembly: RegisterGenericJobType(typeof(PlannerScheduler<KeyDomain.StateEntityKey, ActionKey, KeyDomain.StateManager, KeyDomain.StateData, KeyDomain.StateDataContext,
+    KeyDomain.ActionScheduler, KeyDomain.CumulativeRewardEstimator, KeyDomain.TerminationEvaluator, KeyDomain.DestroyStatesJobScheduler>.CopyPlanDataJob))]
+
 namespace KeyDomain
 {
     struct StateEntityKey : IEquatable<StateEntityKey>, IStateKey
@@ -31,8 +43,13 @@ namespace KeyDomain
         public bool IsTerminal(StateData state, out float terminalReward)
         {
             terminalReward = 0f;
-            var endObjects = new NativeList<int>(1, Allocator.Temp);
-            state.GetTraitBasedObjectIndices(endObjects, ComponentType.ReadWrite<End>());
+
+            using var endObjects = new NativeList<int>(1, Allocator.Temp);
+            using var traitFilter = new NativeArray<ComponentType>(1, Allocator.Temp)
+            {
+                [0] = ComponentType.ReadWrite<End>(),
+            };
+            state.GetTraitBasedObjectIndices(endObjects, traitFilter);
 
             return endObjects.Length > 0;
         }
@@ -46,26 +63,37 @@ namespace KeyDomain
         }
     }
 
-    static class TraitArrayIndex<T>
-        where T : unmanaged, ITrait
+    public struct TraitIndices
     {
-        public static readonly int Index = -1;
+        public static readonly int ColoredIndex = TypeManager.GetTypeIndex<Colored>();
+        public static readonly int CarrierIndex = TypeManager.GetTypeIndex<Carrier>();
+        public static readonly int CarriableIndex = TypeManager.GetTypeIndex<Carriable>();
+        public static readonly int LocalizedIndex = TypeManager.GetTypeIndex<Localized>();
+        public static readonly int LockableIndex = TypeManager.GetTypeIndex<Lockable>();
+        public static readonly int EndIndex = TypeManager.GetTypeIndex<End>();
+    }
 
-        static TraitArrayIndex()
+    public static class TraitArrayIndex<T> where T : unmanaged, ITrait
+    {
+        static readonly int typeIndex = TypeManager.GetTypeIndex<T>();
+
+        public static int Index => Get();
+
+        private static int Get()
         {
-            var typeIndex = TypeManager.GetTypeIndex<T>();
-            if (typeIndex == TypeManager.GetTypeIndex<Colored>())
-                Index = 0;
-            else if (typeIndex == TypeManager.GetTypeIndex<Carrier>())
-                Index = 1;
-            else if (typeIndex == TypeManager.GetTypeIndex<Carriable>())
-                Index = 2;
-            else if (typeIndex == TypeManager.GetTypeIndex<Localized>())
-                Index = 3;
-            else if (typeIndex == TypeManager.GetTypeIndex<Lockable>())
-                Index = 4;
-            else if (typeIndex == TypeManager.GetTypeIndex<End>())
-                Index = 5;
+            if (typeIndex == TraitIndices.ColoredIndex)
+                return 0;
+            else if (typeIndex == TraitIndices.CarrierIndex)
+                return 1;
+            else if (typeIndex == TraitIndices.CarriableIndex)
+                return 2;
+            else if (typeIndex == TraitIndices.LocalizedIndex)
+                return 3;
+            else if (typeIndex == TraitIndices.LockableIndex)
+                return 4;
+            else if (typeIndex == TraitIndices.EndIndex)
+                return 5;
+            return -1;
         }
     }
 

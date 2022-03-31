@@ -47,6 +47,7 @@ namespace KeyDomain
             {
                 // Playback entity changes and output state transition info
                 var entityManager = ExclusiveEntityTransaction;
+                using var removeECB = new EntityCommandBuffer(Allocator.Temp);
 
                 MoveActionECB.Playback(entityManager);
                 for (int i = 0; i < UnexpandedStates.Length; i++)
@@ -55,7 +56,8 @@ namespace KeyDomain
                     var MoveActionRefs = entityManager.GetBuffer<MoveAction.FixupReference>(stateEntity);
                     for (int j = 0; j < MoveActionRefs.Length; j++)
                         CreatedStateInfo.Enqueue(MoveActionRefs[j].TransitionInfo);
-                    entityManager.RemoveComponent(stateEntity, typeof(MoveAction.FixupReference));
+
+                    removeECB.RemoveComponent<MoveAction.FixupReference>(stateEntity);
                 }
 
                 PickupKeyActionECB.Playback(entityManager);
@@ -65,7 +67,8 @@ namespace KeyDomain
                     var PickupKeyActionRefs = entityManager.GetBuffer<PickupKeyAction.FixupReference>(stateEntity);
                     for (int j = 0; j < PickupKeyActionRefs.Length; j++)
                         CreatedStateInfo.Enqueue(PickupKeyActionRefs[j].TransitionInfo);
-                    entityManager.RemoveComponent(stateEntity, typeof(PickupKeyAction.FixupReference));
+
+                    removeECB.RemoveComponent<PickupKeyAction.FixupReference>(stateEntity);
                 }
 
                 UnlockRoomActionECB.Playback(entityManager);
@@ -75,8 +78,11 @@ namespace KeyDomain
                     var UnlockRoomActionRefs = entityManager.GetBuffer<UnlockRoomAction.FixupReference>(stateEntity);
                     for (int j = 0; j < UnlockRoomActionRefs.Length; j++)
                         CreatedStateInfo.Enqueue(UnlockRoomActionRefs[j].TransitionInfo);
-                    entityManager.RemoveComponent(stateEntity, typeof(UnlockRoomAction.FixupReference));
+
+                    removeECB.RemoveComponent<UnlockRoomAction.FixupReference>(stateEntity);
                 }
+
+                removeECB.Playback(entityManager);
             }
         }
 
