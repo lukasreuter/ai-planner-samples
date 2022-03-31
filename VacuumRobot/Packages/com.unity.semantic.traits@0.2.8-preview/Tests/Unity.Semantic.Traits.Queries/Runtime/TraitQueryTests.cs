@@ -52,7 +52,7 @@ namespace Unity.Semantic.Traits.Queries.Tests.Unit
             m_Manager.CreateEntity(typeof(SemanticObjectData), typeof(Alpha));
             m_Manager.CreateEntity(typeof(SemanticObjectData), typeof(Beta));
 
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<ObjectDisposedException>(() =>
             {
                 using (var query = new TraitQuery(m_Manager).WithTraitTypes(typeof(Alpha)))
                 using (var alternateQuery = query.Or().WithTraitTypes(typeof(Beta)))
