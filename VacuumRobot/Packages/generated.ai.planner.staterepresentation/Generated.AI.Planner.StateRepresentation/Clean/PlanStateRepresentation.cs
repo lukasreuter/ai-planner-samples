@@ -13,6 +13,8 @@ using PlanningAgent = Unity.AI.Planner.Traits.PlanningAgent;
 using Generated.AI.Planner.StateRepresentation.Clean;
 
 [assembly: RegisterGenericJobType(typeof(GraphExpansionJob<StateEntityKey, StateData, StateDataContext, ActionKey>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.BackpropagationJob<
+    Generated.AI.Planner.StateRepresentation.Clean.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
 
 namespace Generated.AI.Planner.StateRepresentation.Clean
 {
