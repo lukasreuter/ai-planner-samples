@@ -5919,23 +5919,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Query:
     m_QueryGroups:
-    - m_Filters:
-      - id: 0
+    - m_Filters: []
       m_Quantifier: 0
       m_QuantifierLimit: 1
       m_QuantifierScorer:
-        id: 1
+        id: 0
       m_RequiredTraits:
         m_Traits:
         - {fileID: 11400000, guid: 11e92cabadf1b8748910960dc9633039, type: 2}
       m_ProhibitedTraits:
         m_Traits: []
-    - m_Filters:
-      - id: 2
+    - m_Filters: []
       m_Quantifier: 0
       m_QuantifierLimit: 1
       m_QuantifierScorer:
-        id: 1
+        id: 0
       m_RequiredTraits:
         m_Traits:
         - {fileID: 11400000, guid: acdcec5a57d5a4b4cb8c4d3883581964, type: 2}
@@ -5944,17 +5942,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: DistanceFilter, ns: Unity.Semantic.Traits.Queries, asm: Unity.Semantic.Traits.Queries}
-      data:
-        m_Radius: 5
-        m_Source: {fileID: 47606526}
-    00000001:
       type: {class: , ns: , asm: }
-    00000002:
-      type: {class: DistanceFilter, ns: Unity.Semantic.Traits.Queries, asm: Unity.Semantic.Traits.Queries}
-      data:
-        m_Radius: 0
-        m_Source: {fileID: 0}
 --- !u!114 &4655835017648887278
 MonoBehaviour:
   m_ObjectHideFlags: 0
