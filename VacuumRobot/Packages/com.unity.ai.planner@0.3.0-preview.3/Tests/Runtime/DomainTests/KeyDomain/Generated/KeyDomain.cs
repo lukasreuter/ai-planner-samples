@@ -13,10 +13,8 @@ using UnityEngine;
 [assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.GraphExpansionJob<KeyDomain.StateEntityKey, KeyDomain.StateData, KeyDomain.StateDataContext, ActionKey>))]
 [assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.BackpropagationJob<KeyDomain.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
 [assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.QueueToListJob<KeyDomain.StateEntityKey>))]
-[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.QueueToListJob<int>))]
 [assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.SelectionJob<KeyDomain.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
 [assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.PrepareForExpansionJob<KeyDomain.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
-[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.PrepareForExpansionJob<int, int>))]
 [assembly: RegisterGenericJobType(typeof(EvaluateNewStatesJob<KeyDomain.StateEntityKey, KeyDomain.StateData, KeyDomain.StateDataContext,
     KeyDomain.CumulativeRewardEstimator, KeyDomain.TerminationEvaluator>))]
 [assembly: RegisterGenericJobType(typeof(PlannerScheduler<KeyDomain.StateEntityKey, ActionKey, KeyDomain.StateManager, KeyDomain.StateData, KeyDomain.StateDataContext,
@@ -97,6 +95,7 @@ namespace KeyDomain
         }
     }
 
+#warning should implement Equals
     struct TraitBasedObject : ITraitBasedObject
     {
         public int Length => 6;

@@ -1,13 +1,29 @@
 ﻿using System;
+using KeyDomain;
 using NUnit.Framework;
+using Unity.AI.Planner;
 using Unity.AI.Planner.Jobs;
+using Unity.AI.Planner.Tests;
 using Unity.Collections;
 using Unity.Jobs;
+using DefaultScheduler = Unity.AI.Planner.PlannerScheduler<int, int, Unity.AI.Planner.Tests.TestStateManager, int, Unity.AI.Planner.Tests.TestStateDataContext, Unity.AI.Planner.Tests.CountToActionScheduler, Unity.AI.Planner.Tests.DefaultCumulativeRewardEstimator<int>, Unity.AI.Planner.Tests.DefaultTerminalStateEvaluator<int>, Unity.AI.Planner.Tests.Integration.DestroyIntsScheduler>;
+using CountToScheduler = Unity.AI.Planner.PlannerScheduler<int, int, Unity.AI.Planner.Tests.TestStateManager, int, Unity.AI.Planner.Tests.TestStateDataContext, Unity.AI.Planner.Tests.CountToActionScheduler, Unity.AI.Planner.Tests.CountToCumulativeRewardEstimator, Unity.AI.Planner.Tests.CountToTerminationEvaluator, Unity.AI.Planner.Tests.Integration.DestroyIntsScheduler>;
+using CountStateScheduler = Unity.AI.Planner.PlannerScheduler<int, int, Unity.AI.Planner.Tests.TestStateManager, int, Unity.AI.Planner.Tests.TestStateDataContext, Unity.AI.Planner.Tests.CountToActionScheduler, Unity.AI.Planner.Tests.CountToCumulativeRewardEstimator, Unity.AI.Planner.Tests.CountToTerminationEvaluator, Unity.AI.Planner.Tests.CountToDestroyStatesScheduler>;
+
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.GraphExpansionJob<int, int, TestStateDataContext, int>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.BackpropagationJob<int, int>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.QueueToListJob<int>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.SelectionJob<int, int>))]
+[assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.PrepareForExpansionJob<int, int>))]
+
+[assembly: RegisterGenericJobType(typeof(EvaluateNewStatesJob<int, int, TestStateDataContext, DefaultCumulativeRewardEstimator<int>, DefaultTerminalStateEvaluator<int>>))]
+[assembly: RegisterGenericJobType(typeof(EvaluateNewStatesJob<int, int, TestStateDataContext, CountToCumulativeRewardEstimator, CountToTerminationEvaluator>))]
+[assembly: RegisterGenericJobType(typeof(DefaultScheduler.CopyPlanDataJob))]
+[assembly: RegisterGenericJobType(typeof(CountToScheduler.CopyPlanDataJob))]
+[assembly: RegisterGenericJobType(typeof(CountStateScheduler.CopyPlanDataJob))]
 
 namespace Unity.AI.Planner.Tests.Integration
 {
-    using CountToScheduler = PlannerScheduler<int, int, TestStateManager, int, TestStateDataContext, CountToActionScheduler, CountToCumulativeRewardEstimator, CountToTerminationEvaluator, DestroyIntsScheduler>;
-    using DefaultScheduler = PlannerScheduler<int, int, TestStateManager, int, TestStateDataContext, CountToActionScheduler, DefaultCumulativeRewardEstimator<int>, DefaultTerminalStateEvaluator<int>, DestroyIntsScheduler>;
 
     struct DestroyIntsScheduler : IDestroyStatesScheduler<int, int, TestStateDataContext, TestStateManager>
     {

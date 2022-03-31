@@ -135,6 +135,7 @@ namespace Unity.AI.Planner.DataTests
         {
             CreatedEntities.Clear();
             ECB.Playback(ExclusiveEntityTransaction);
+            using var removeECB = new EntityCommandBuffer(Allocator.Temp);
 
             for (int i = 0; i < ParentEntities.Length; i++)
             {
@@ -147,8 +148,11 @@ namespace Unity.AI.Planner.DataTests
                 {
                     CreatedEntities.Add(reference[j].GeneratedEntity);
                 }
-                ExclusiveEntityTransaction.RemoveComponent(entity, typeof(GeneratedEntityData));
+
+                removeECB.RemoveComponent<GeneratedEntityData>(entity);
             }
+
+            removeECB.Playback(ExclusiveEntityTransaction);
         }
     }
 
