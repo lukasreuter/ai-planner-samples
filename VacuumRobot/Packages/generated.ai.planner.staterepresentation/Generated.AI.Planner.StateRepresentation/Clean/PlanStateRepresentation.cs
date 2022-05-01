@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Unity.AI.Planner;
 using Unity.AI.Planner.Jobs;
 using Unity.AI.Planner.Traits;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
@@ -36,34 +37,31 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         public string Label => $"State{Entity}";
     }
 
-    public struct TraitIndices
+    internal sealed class TraitArrayIndexContext
     {
-        public static readonly int RobotIndex = TypeManager.GetTypeIndex<Robot>();
-        public static readonly int LocationIndex = TypeManager.GetTypeIndex<Location>();
-        public static readonly int DirtIndex = TypeManager.GetTypeIndex<Dirt>();
-        public static readonly int MoveableIndex = TypeManager.GetTypeIndex<Moveable>();
-        public static readonly int PlanningAgentIndex = TypeManager.GetTypeIndex<PlanningAgent>();
     }
 
     public static class TraitArrayIndex<T> where T : unmanaged, ITrait
     {
-        static readonly int typeIndex = TypeManager.GetTypeIndex<T>();
+        public static int Index => index.Data;
+        private static readonly SharedStatic<int> index = SharedStatic<int>.GetOrCreate<TraitArrayIndexContext, T>();
 
-        public static int Index => Get();
-
-        private static int Get()
+        static TraitArrayIndex()
         {
-            if (typeIndex == TraitIndices.RobotIndex)
-                return 0;
-            else if (typeIndex == TraitIndices.LocationIndex)
-                return 1;
-            else if (typeIndex == TraitIndices.DirtIndex)
-                return 2;
-            else if (typeIndex == TraitIndices.MoveableIndex)
-                return 3;
-            else if (typeIndex == TraitIndices.PlanningAgentIndex)
-                return 4;
-            return -1;
+            int typeIndex = TypeManager.GetTypeIndex<T>();
+            ref var data = ref index.Data;
+            if (typeIndex == TypeManager.GetTypeIndex<Robot>())
+                data = 0;
+            else if (typeIndex == TypeManager.GetTypeIndex<Location>())
+                data = 1;
+            else if (typeIndex == TypeManager.GetTypeIndex<Dirt>())
+                data = 2;
+            else if (typeIndex == TypeManager.GetTypeIndex<Moveable>())
+                data = 3;
+            else if (typeIndex == TypeManager.GetTypeIndex<PlanningAgent>())
+                data = 4;
+            else
+                data = -1;
         }
     }
 
