@@ -37,3 +37,4 @@ sysinfo.txt
 .idea/
 *.DotSettings
 VacuumRobot/Logs
+.DS_Store
