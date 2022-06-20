@@ -61,7 +61,7 @@ namespace Unity.AI.Planner.DataTests
     [BurstCompile]
     struct ChooseNumbers : IJob
     {
-        [ReadOnly] public NativeHashMap<int, Entity> EntityMap;
+        [ReadOnly] public NativeParallelHashMap<int, Entity> EntityMap;
         [ReadOnly] public int NumEntitiesToChoose;
 
         [WriteOnly] public NativeList<Entity> ChosenEntities;
@@ -169,7 +169,7 @@ namespace Unity.AI.Planner.DataTests
         public BufferFromEntity<BoolData> BoolBufferData;
 
 
-        [WriteOnly] public NativeHashMap<int, Entity>.ParallelWriter IntToEntityLookup;
+        [WriteOnly] public NativeParallelHashMap<int, Entity>.ParallelWriter IntToEntityLookup;
         [WriteOnly] public EntityCommandBuffer.ParallelWriter ECB;
 
         public void Execute(int index)
@@ -226,7 +226,7 @@ namespace Unity.AI.Planner.DataTests
             var exclusiveEntityTransaction = entityManager.BeginExclusiveEntityTransaction();
 
             // job data containers
-            var valToEntityLookup = new NativeHashMap<int, Entity>(100, Allocator.Persistent) { { 0, firstEntity } };
+            var valToEntityLookup = new NativeParallelHashMap<int, Entity>(100, Allocator.Persistent) { { 0, firstEntity } };
             var commandBuffers = new List<EntityCommandBuffer>();
             var chosenEntities = new NativeList<Entity>(Allocator.Persistent);
             var createdEntities = new NativeList<Entity>(Allocator.Persistent);

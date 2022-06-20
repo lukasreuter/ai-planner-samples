@@ -7,7 +7,7 @@ namespace Unity.AI.Planner
 {
     static class PlanGraphExtensions
     {
-        public static void GetExpandedDepthMap<TStateKey, TStateInfo, TActionKey, TActionInfo, TStateTransitionInfo>(this PlanGraph<TStateKey, TStateInfo, TActionKey, TActionInfo, TStateTransitionInfo> planGraph, TStateKey rootKey, NativeHashMap<TStateKey, int> depthMap, NativeQueue<StateHorizonPair<TStateKey>> queue)
+        public static void GetExpandedDepthMap<TStateKey, TStateInfo, TActionKey, TActionInfo, TStateTransitionInfo>(this PlanGraph<TStateKey, TStateInfo, TActionKey, TActionInfo, TStateTransitionInfo> planGraph, TStateKey rootKey, NativeParallelHashMap<TStateKey, int> depthMap, NativeQueue<StateHorizonPair<TStateKey>> queue)
             where TStateKey : unmanaged, IEquatable<TStateKey>
             where TStateInfo : unmanaged, IStateInfo
             where TActionKey : unmanaged, IEquatable<TActionKey>
@@ -53,7 +53,7 @@ namespace Unity.AI.Planner
             }
         }
 
-        public static void GetReachableDepthMap<TStateKey, TStateInfo, TActionKey, TActionInfo, TStateTransitionInfo>(this PlanGraph<TStateKey, TStateInfo, TActionKey, TActionInfo, TStateTransitionInfo> planGraph, TStateKey rootKey, NativeHashMap<TStateKey, int> depthMap, NativeQueue<StateHorizonPair<TStateKey>> queue)
+        public static void GetReachableDepthMap<TStateKey, TStateInfo, TActionKey, TActionInfo, TStateTransitionInfo>(this PlanGraph<TStateKey, TStateInfo, TActionKey, TActionInfo, TStateTransitionInfo> planGraph, TStateKey rootKey, NativeParallelHashMap<TStateKey, int> depthMap, NativeQueue<StateHorizonPair<TStateKey>> queue)
             where TStateKey : unmanaged, IEquatable<TStateKey>
             where TStateInfo : unmanaged, IStateInfo
             where TActionKey : unmanaged, IEquatable<TActionKey>

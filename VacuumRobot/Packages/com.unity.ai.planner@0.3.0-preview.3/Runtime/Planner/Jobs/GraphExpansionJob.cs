@@ -11,7 +11,7 @@ namespace Unity.AI.Planner.Jobs
         where TActionKey : unmanaged, IEquatable<TActionKey>
     {
         public PlanGraph<TStateKey, StateInfo, TActionKey, ActionInfo, StateTransitionInfo> planGraph { get; set; }
-        public NativeMultiHashMap<int, TStateKey> BinnedStateKeys;
+        public NativeParallelMultiHashMap<int, TStateKey> BinnedStateKeys;
 
         public NativeQueue<StateTransitionInfoPair<TStateKey, TActionKey, StateTransitionInfo>> InputStateExpansionInfo { get; set; }
         public NativeList<StateTransitionInfoPair<TStateKey, TActionKey, StateTransitionInfo>> OutputStateExpansionInfo { get; set; }
@@ -39,19 +39,19 @@ namespace Unity.AI.Planner.Jobs
         where TActionKey : unmanaged, IEquatable<TActionKey>
     {
         [ReadOnly] public NativeArray<StateTransitionInfoPair<TStateKey, TActionKey, StateTransitionInfo>> NewStateTransitionInfoPairs;
-        [ReadOnly] public NativeMultiHashMap<int, TStateKey> BinnedStateKeys;
+        [ReadOnly] public NativeParallelMultiHashMap<int, TStateKey> BinnedStateKeys;
 
         public TStateDataContext StateDataContext;
 
         public NativeQueue<TStateKey>.ParallelWriter NewStates;
         public NativeQueue<TStateKey>.ParallelWriter StatesToDestroy;
 
-        public NativeMultiHashMap<TStateKey, TActionKey>.ParallelWriter ActionLookup;
-        public NativeMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey>.ParallelWriter ResultingStateLookup;
-        public NativeMultiHashMap<TStateKey, TStateKey>.ParallelWriter PredecessorGraph;
+        public NativeParallelMultiHashMap<TStateKey, TActionKey>.ParallelWriter ActionLookup;
+        public NativeParallelMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey>.ParallelWriter ResultingStateLookup;
+        public NativeParallelMultiHashMap<TStateKey, TStateKey>.ParallelWriter PredecessorGraph;
 
-        public NativeHashMap<StateActionPair<TStateKey, TActionKey>, ActionInfo>.ParallelWriter ActionInfoLookup;
-        public NativeHashMap<StateTransition<TStateKey, TActionKey>, StateTransitionInfo>.ParallelWriter StateTransitionInfoLookup;
+        public NativeParallelHashMap<StateActionPair<TStateKey, TActionKey>, ActionInfo>.ParallelWriter ActionInfoLookup;
+        public NativeParallelHashMap<StateTransition<TStateKey, TActionKey>, StateTransitionInfo>.ParallelWriter StateTransitionInfoLookup;
 
         public void Execute(int index)
         {

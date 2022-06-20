@@ -13,27 +13,27 @@ namespace Unity.AI.Planner.Traits
 
     struct ObjectCorrespondence
     {
-        [NativeDisableContainerSafetyRestriction] NativeHashMap<ObjectId, byte> m_RightIds;
-        [NativeDisableContainerSafetyRestriction] NativeHashMap<ObjectId, ObjectId> m_Matches;
+        [NativeDisableContainerSafetyRestriction] NativeParallelHashMap<ObjectId, byte> m_RightIds;
+        [NativeDisableContainerSafetyRestriction] NativeParallelHashMap<ObjectId, ObjectId> m_Matches;
         [NativeDisableContainerSafetyRestriction] NativeList<ObjectIdPairs> m_TempMatches;
         [NativeDisableContainerSafetyRestriction] NativeList<ObjectIdPairs> m_ObjectPairsQueue;
-        [NativeDisableContainerSafetyRestriction] NativeHashMap<ObjectId, int> m_LhsIdToIndex;
-        [NativeDisableContainerSafetyRestriction] NativeHashMap<ObjectId, int> m_RhsIdToIndex;
+        [NativeDisableContainerSafetyRestriction] NativeParallelHashMap<ObjectId, int> m_LhsIdToIndex;
+        [NativeDisableContainerSafetyRestriction] NativeParallelHashMap<ObjectId, int> m_RhsIdToIndex;
 
         public bool IsCreated;
 
         public ObjectCorrespondence(int numberOfObjects, Allocator allocator)
         {
-            m_RightIds = new NativeHashMap<ObjectId, byte>(numberOfObjects, allocator);
-            m_Matches = new NativeHashMap<ObjectId, ObjectId>(numberOfObjects + 1, allocator)
+            m_RightIds = new NativeParallelHashMap<ObjectId, byte>(numberOfObjects, allocator);
+            m_Matches = new NativeParallelHashMap<ObjectId, ObjectId>(numberOfObjects + 1, allocator)
             {
                 [ ObjectId.None ] = ObjectId.None // default null relation case
             };
             m_TempMatches = new NativeList<ObjectIdPairs>(numberOfObjects, allocator);
             m_ObjectPairsQueue = new NativeList<ObjectIdPairs>(numberOfObjects, allocator);
 
-            m_LhsIdToIndex = new NativeHashMap<ObjectId, int>(numberOfObjects, allocator);
-            m_RhsIdToIndex = new NativeHashMap<ObjectId, int>(numberOfObjects, allocator);
+            m_LhsIdToIndex = new NativeParallelHashMap<ObjectId, int>(numberOfObjects, allocator);
+            m_RhsIdToIndex = new NativeParallelHashMap<ObjectId, int>(numberOfObjects, allocator);
 
             IsCreated = true;
         }
@@ -118,9 +118,9 @@ namespace Unity.AI.Planner.Traits
             return m_RhsIdToIndex[obj];
         }
 
-        public NativeHashMap<ObjectId, ObjectId> GetCorrespondence(Allocator allocator)
+        public NativeParallelHashMap<ObjectId, ObjectId> GetCorrespondence(Allocator allocator)
         {
-            var copy = new NativeHashMap<ObjectId, ObjectId>(m_Matches.Count(), allocator);
+            var copy = new NativeParallelHashMap<ObjectId, ObjectId>(m_Matches.Count(), allocator);
 
             using(var keys = m_Matches.GetKeyArray(Allocator.TempJob))
             using(var values = m_Matches.GetValueArray(Allocator.TempJob))

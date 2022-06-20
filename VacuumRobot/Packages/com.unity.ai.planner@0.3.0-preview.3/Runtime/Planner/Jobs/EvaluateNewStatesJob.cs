@@ -22,8 +22,8 @@ namespace Unity.AI.Planner.Jobs
         [ReadOnly] public NativeArray<TStateKey> States;
 
         // Output
-        [WriteOnly] public NativeHashMap<TStateKey, StateInfo>.ParallelWriter StateInfoLookup;
-        [WriteOnly] public NativeMultiHashMap<int, TStateKey>.ParallelWriter BinnedStateKeys;
+        [WriteOnly] public NativeParallelHashMap<TStateKey, StateInfo>.ParallelWriter StateInfoLookup;
+        [WriteOnly] public NativeParallelMultiHashMap<int, TStateKey>.ParallelWriter BinnedStateKeys;
 
         public void Execute(int index)
         {

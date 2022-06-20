@@ -19,17 +19,17 @@ namespace Unity.AI.Planner.Traits
         where TStateDataContext : struct, ITraitBasedStateDataContext<TObject, TStateKey, TStateData>
         where TStateManager : ITraitBasedStateManager<TObject, TStateKey, TStateData, TStateDataContext>
     {
-        NativeHashMap<TraitBasedObjectId, Entity> m_ObjectIdToEntity;
+        NativeParallelHashMap<TraitBasedObjectId, Entity> m_ObjectIdToEntity;
         TStateManager m_StateManager;
 
         // Used locally for caching purposes
         Dictionary<ObjectId, TObject> m_ObjectIdToObject = new Dictionary<ObjectId, TObject>();
         Dictionary<Entity, TraitBasedObjectId> m_EntityToObjectId = new Dictionary<Entity, TraitBasedObjectId>();
-        NativeHashMap<ComponentType, ComponentType> m_TypeLookup;
+        NativeParallelHashMap<ComponentType, ComponentType> m_TypeLookup;
         public PlannerStateConverter(ProblemDefinition problemDefinition, TStateManager stateManager)
         {
             m_StateManager = stateManager;
-            m_ObjectIdToEntity = new NativeHashMap<TraitBasedObjectId, Entity>(1, Allocator.Persistent);
+            m_ObjectIdToEntity = new NativeParallelHashMap<TraitBasedObjectId, Entity>(1, Allocator.Persistent);
 
             BuildTypeCorrespondence(problemDefinition);
         }
@@ -38,7 +38,7 @@ namespace Unity.AI.Planner.Traits
         {
             var traitDefinitions = problemDefinition.GetTraitsUsed().ToArray();
 
-            m_TypeLookup = new NativeHashMap<ComponentType, ComponentType>(traitDefinitions.Length, Allocator.Persistent);
+            m_TypeLookup = new NativeParallelHashMap<ComponentType, ComponentType>(traitDefinitions.Length, Allocator.Persistent);
 
             foreach (var traitDefinition in traitDefinitions)
             {

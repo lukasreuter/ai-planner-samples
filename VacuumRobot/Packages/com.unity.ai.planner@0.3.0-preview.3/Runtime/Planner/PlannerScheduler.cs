@@ -40,17 +40,17 @@ namespace Unity.AI.Planner
         float m_DiscountFactor;
 
         // Containers for jobs
-        NativeMultiHashMap<TStateKey, int> m_AllSelectedStates;
-        NativeHashMap<TStateKey, byte> m_SelectedUnexpandedStates;
+        NativeParallelMultiHashMap<TStateKey, int> m_AllSelectedStates;
+        NativeParallelHashMap<TStateKey, byte> m_SelectedUnexpandedStates;
         NativeList<TStateKey> m_SelectedUnexpandedStatesList;
         NativeQueue<StateTransitionInfoPair<TStateKey, TActionKey, StateTransitionInfo>> m_CreatedStateInfoQueue;
         NativeList<StateTransitionInfoPair<TStateKey, TActionKey, StateTransitionInfo>> m_CreatedStateInfoList;
         NativeList<TStateKey> m_NewStateList;
         NativeList<TStateKey> m_SelectionInputStates;
         NativeList<int> m_SelectionInputBudgets;
-        NativeMultiHashMap<TStateKey, int> m_SelectionOutputStateBudgets;
-        NativeMultiHashMap<int, TStateKey> m_SelectedStatesByHorizon;
-        NativeHashMap<TStateKey, byte> m_PredecessorStates;
+        NativeParallelMultiHashMap<TStateKey, int> m_SelectionOutputStateBudgets;
+        NativeParallelMultiHashMap<int, TStateKey> m_SelectedStatesByHorizon;
+        NativeParallelHashMap<TStateKey, byte> m_PredecessorStates;
         NativeList<TStateKey> m_HorizonStateList;
         NativeQueue<TStateKey> m_NewStateQueue;
         NativeQueue<TStateKey>.ParallelWriter m_NewStateQueueParallelWriter;
@@ -75,12 +75,12 @@ namespace Unity.AI.Planner
             m_TerminationEvaluator = terminationEvaluator;
             m_DiscountFactor = discountFactor;
 
-            m_AllSelectedStates = new NativeMultiHashMap<TStateKey, int>(1, Allocator.Persistent);
-            m_SelectedUnexpandedStates = new NativeHashMap<TStateKey,byte>(1, Allocator.Persistent);
+            m_AllSelectedStates = new NativeParallelMultiHashMap<TStateKey, int>(1, Allocator.Persistent);
+            m_SelectedUnexpandedStates = new NativeParallelHashMap<TStateKey,byte>(1, Allocator.Persistent);
             m_SelectedUnexpandedStatesList = new NativeList<TStateKey>(Allocator.Persistent);
             m_SelectionInputStates = new NativeList<TStateKey>(1, Allocator.Persistent);
             m_SelectionInputBudgets = new NativeList<int>(1, Allocator.Persistent);
-            m_SelectionOutputStateBudgets = new NativeMultiHashMap<TStateKey, int>(1, Allocator.Persistent);
+            m_SelectionOutputStateBudgets = new NativeParallelMultiHashMap<TStateKey, int>(1, Allocator.Persistent);
 
             m_CreatedStateInfoQueue = new NativeQueue<StateTransitionInfoPair<TStateKey, TActionKey, StateTransitionInfo>>(Allocator.Persistent);
             m_CreatedStateInfoList = new NativeList<StateTransitionInfoPair<TStateKey, TActionKey, StateTransitionInfo>>(Allocator.Persistent);
@@ -92,8 +92,8 @@ namespace Unity.AI.Planner
             m_StatesToDestroyParallelWriter = m_StatesToDestroy.AsParallelWriter();
             m_GraphTraversalQueue = new NativeQueue<StateHorizonPair<TStateKey>>(Allocator.Persistent);
 
-            m_SelectedStatesByHorizon = new NativeMultiHashMap<int, TStateKey>(1, Allocator.Persistent);
-            m_PredecessorStates = new NativeHashMap<TStateKey, byte>(1, Allocator.Persistent);
+            m_SelectedStatesByHorizon = new NativeParallelMultiHashMap<int, TStateKey>(1, Allocator.Persistent);
+            m_PredecessorStates = new NativeParallelHashMap<TStateKey, byte>(1, Allocator.Persistent);
             m_HorizonStateList = new NativeList<TStateKey>(1, Allocator.Persistent);
         }
 
@@ -175,7 +175,7 @@ namespace Unity.AI.Planner
             newPlanData.RootStateKey = newRoot;
 
             var statesToCopy = new NativeList<TStateKey>(oldPlanGraph.Size, Allocator.TempJob);
-            var statesToCopyLookup = new NativeHashMap<TStateKey, byte>(oldPlanGraph.Size, Allocator.TempJob);
+            var statesToCopyLookup = new NativeParallelHashMap<TStateKey, byte>(oldPlanGraph.Size, Allocator.TempJob);
             var stateKeys = oldPlanGraph.StateInfoLookup.GetKeyArray(Allocator.TempJob);
             var jobHandle = CurrentJobHandle;
 
@@ -227,10 +227,10 @@ namespace Unity.AI.Planner
             public PlanGraph<TStateKey, StateInfo, TActionKey, ActionInfo, StateTransitionInfo> planGraph;
             public NativeArray<TStateKey> StateKeys;
 
-            public NativeHashMap<TStateKey, int> ReachableStateDepthMap;
+            public NativeParallelHashMap<TStateKey, int> ReachableStateDepthMap;
             public NativeQueue<TStateKey> StatesToDestroy;
             public NativeList<TStateKey> StatesToCopy;
-            public NativeHashMap<TStateKey, byte> StatesToCopyLookup;
+            public NativeParallelHashMap<TStateKey, byte> StatesToCopyLookup;
             public NativeQueue<StateHorizonPair<TStateKey>>  GraphTraversalQueue;
 
             public void Execute()
@@ -261,12 +261,12 @@ namespace Unity.AI.Planner
         internal struct CopyPlanDataJob : IJobParallelForDefer
         {
             [ReadOnly] public NativeArray<TStateKey> StatesToCopy;
-            [ReadOnly] public NativeHashMap<TStateKey, byte> StatesToCopyLookup;
+            [ReadOnly] public NativeParallelHashMap<TStateKey, byte> StatesToCopyLookup;
 
             [ReadOnly] public PlanGraph<TStateKey, StateInfo, TActionKey, ActionInfo, StateTransitionInfo> sourcePlanGraph;
 
             [WriteOnly] public PlanGraph<TStateKey, StateInfo, TActionKey, ActionInfo, StateTransitionInfo>.ParallelWriter PlanGraph;
-            [WriteOnly] public NativeMultiHashMap<int, TStateKey>.ParallelWriter BinnedStateKeyLookup;
+            [WriteOnly] public NativeParallelMultiHashMap<int, TStateKey>.ParallelWriter BinnedStateKeyLookup;
 
             public void Execute(int index)
             {
@@ -696,16 +696,16 @@ namespace Unity.AI.Planner
 
         struct ClearContainersJob : IJob
         {
-            public NativeMultiHashMap<TStateKey, int> AllSelectedStates;
-            public NativeHashMap<TStateKey, byte> SelectedUnexpandedStates;
+            public NativeParallelMultiHashMap<TStateKey, int> AllSelectedStates;
+            public NativeParallelHashMap<TStateKey, byte> SelectedUnexpandedStates;
             public NativeList<TStateKey> SelectedUnexpandedStatesList;
             public NativeList<StateTransitionInfoPair<TStateKey, TActionKey, StateTransitionInfo>> CreatedStateInfoList;
             public NativeList<TStateKey> NewStateList;
             public NativeList<TStateKey> SelectionInputStates;
             public NativeList<int> SelectionInputBudgets;
-            public NativeMultiHashMap<TStateKey, int> SelectionOutputStateBudgets;
-            public NativeMultiHashMap<int, TStateKey> SelectedStatesByHorizon;
-            public NativeHashMap<TStateKey, byte> PredecessorStates;
+            public NativeParallelMultiHashMap<TStateKey, int> SelectionOutputStateBudgets;
+            public NativeParallelMultiHashMap<int, TStateKey> SelectedStatesByHorizon;
+            public NativeParallelHashMap<TStateKey, byte> PredecessorStates;
             public NativeList<TStateKey> HorizonStateList;
 
             public void Execute()

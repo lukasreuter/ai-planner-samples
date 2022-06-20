@@ -14,8 +14,8 @@ namespace Unity.AI.Planner
     {
         // Info for planning
         public TStateKey RootStateKey { get; internal set; }
-        public NativeHashMap<TStateKey, int> StateDepthLookup;
-        public NativeMultiHashMap<int, TStateKey> BinnedStateKeyLookup;
+        public NativeParallelHashMap<TStateKey, int> StateDepthLookup;
+        public NativeParallelMultiHashMap<int, TStateKey> BinnedStateKeyLookup;
         public PlanGraph<TStateKey, StateInfo, TActionKey, ActionInfo, StateTransitionInfo> PlanGraph;
 
         internal TStateManager m_StateManager;
@@ -26,8 +26,8 @@ namespace Unity.AI.Planner
         {
             m_StateManager = stateManager;
 
-            StateDepthLookup = new NativeHashMap<TStateKey, int>(stateCapacity, Allocator.Persistent);
-            BinnedStateKeyLookup = new NativeMultiHashMap<int, TStateKey>(stateCapacity, Allocator.Persistent);
+            StateDepthLookup = new NativeParallelHashMap<TStateKey, int>(stateCapacity, Allocator.Persistent);
+            BinnedStateKeyLookup = new NativeParallelMultiHashMap<int, TStateKey>(stateCapacity, Allocator.Persistent);
             PlanGraph = new PlanGraph<TStateKey, StateInfo, TActionKey, ActionInfo, StateTransitionInfo>(stateCapacity, actionCapacity, transitionCapacity);
         }
 
@@ -59,7 +59,7 @@ namespace Unity.AI.Planner
 
         internal void Prune()
         {
-            var minimumReachableDepthMap = new NativeHashMap<TStateKey, int>(PlanGraph.Size, Allocator.Temp);
+            var minimumReachableDepthMap = new NativeParallelHashMap<TStateKey, int>(PlanGraph.Size, Allocator.Temp);
             using (var queue = new NativeQueue<StateHorizonPair<TStateKey>>(Allocator.Temp))
             {
                 PlanGraph.GetReachableDepthMap(RootStateKey, minimumReachableDepthMap, queue);

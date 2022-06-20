@@ -26,8 +26,8 @@ namespace Unity.AI.Planner.Tests.Unit
 
         PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo> m_PlanGraph;
         PlanGraphBuilder<int,int> m_Builder;
-        NativeHashMap<int, int> m_DepthMap;
-        NativeMultiHashMap<int, int> m_SelectedStates;
+        NativeParallelHashMap<int, int> m_DepthMap;
+        NativeParallelMultiHashMap<int, int> m_SelectedStates;
 
         public BackpropagationJobTests(BackpropagationJobMode jobMode)
         {
@@ -38,7 +38,7 @@ namespace Unity.AI.Planner.Tests.Unit
         {
             if (!m_DepthMap.IsCreated)
             {
-                m_DepthMap = new NativeHashMap<int, int>(m_PlanGraph.Size, Allocator.TempJob);
+                m_DepthMap = new NativeParallelHashMap<int, int>(m_PlanGraph.Size, Allocator.TempJob);
                 using (var queue = new NativeQueue<StateHorizonPair<int>>(Allocator.Temp))
                 {
                     m_PlanGraph.GetExpandedDepthMap(k_RootState, m_DepthMap, queue);
@@ -79,8 +79,8 @@ namespace Unity.AI.Planner.Tests.Unit
             }
 
             // Containers
-            var m_SelectedStatesByHorizon = new NativeMultiHashMap<int, int>(m_DepthMap.Count(), Allocator.TempJob);
-            var predecessorStates  = new NativeHashMap<int, byte>(m_DepthMap.Count(), Allocator.TempJob);
+            var m_SelectedStatesByHorizon = new NativeParallelMultiHashMap<int, int>(m_DepthMap.Count(), Allocator.TempJob);
+            var predecessorStates  = new NativeParallelHashMap<int, byte>(m_DepthMap.Count(), Allocator.TempJob);
             var horizonStateList = new NativeList<int>(m_DepthMap.Count(), Allocator.TempJob);
 
             jobHandle = new UpdateDepthMapAndResizeContainersJob<int>
@@ -165,7 +165,7 @@ namespace Unity.AI.Planner.Tests.Unit
             */
             m_PlanGraph = new PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo>(10, 10, 10);
             m_Builder = new PlanGraphBuilder<int, int>() { planGraph = m_PlanGraph };
-            m_SelectedStates = new NativeMultiHashMap<int, int>(1, Allocator.TempJob);
+            m_SelectedStates = new NativeParallelMultiHashMap<int, int>(1, Allocator.TempJob);
 
             // Build common plan graph
             var stateContext = m_Builder.AddState(k_RootState);
@@ -510,7 +510,7 @@ namespace Unity.AI.Planner.Tests.Unit
                 .UpdateInfo(estimatedReward: 0f)
                 .AddAction(k_ActionOne).AddResultingState(k_StateOne, transitionUtility: 15);
 
-            m_DepthMap = new NativeHashMap<int, int>(m_PlanGraph.Size, Allocator.TempJob);
+            m_DepthMap = new NativeParallelHashMap<int, int>(m_PlanGraph.Size, Allocator.TempJob);
             using (var queue = new NativeQueue<StateHorizonPair<int>>(Allocator.Temp))
             {
                 m_PlanGraph.GetExpandedDepthMap(k_RootState, m_DepthMap, queue);
@@ -702,9 +702,9 @@ namespace Unity.AI.Planner.Tests.Performance
         public void BackupFromMultipleStates()
         {
             PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo> planGraph = default;
-            NativeHashMap<int, int> depthMap = default;
+            NativeParallelHashMap<int, int> depthMap = default;
             NativeQueue<StateHorizonPair<int>> queue = default;
-            NativeMultiHashMap<int, int> m_SelectedStates = default;
+            NativeParallelMultiHashMap<int, int> m_SelectedStates = default;
             var builder = new PlanGraphBuilder<int, int>();
 
             Measure.Method(() =>
@@ -724,8 +724,8 @@ namespace Unity.AI.Planner.Tests.Performance
                 var leafNodeStart = PlanGraphUtility.GetTotalNodeCountForTreeDepth(kActionsPerState, kMaxDepth - 1);
                 var expandedNodeStart = PlanGraphUtility.GetTotalNodeCountForTreeDepth(kActionsPerState, kMaxDepth - 2);
 
-                m_SelectedStates = new NativeMultiHashMap<int, int>(leafNodeStart - expandedNodeStart, Allocator.TempJob);
-                depthMap = new NativeHashMap<int, int>(nodeCount, Allocator.TempJob);
+                m_SelectedStates = new NativeParallelMultiHashMap<int, int>(leafNodeStart - expandedNodeStart, Allocator.TempJob);
+                depthMap = new NativeParallelHashMap<int, int>(nodeCount, Allocator.TempJob);
                 queue = new NativeQueue<StateHorizonPair<int>>(Allocator.TempJob);
                 planGraph = PlanGraphUtility.BuildTree(kActionsPerState, 1, kMaxDepth);
                 planGraph.GetExpandedDepthMap(kRootState, depthMap, queue);
@@ -759,8 +759,8 @@ namespace Unity.AI.Planner.Tests.Performance
             var builder = new PlanGraphBuilder<int, int>();
             PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo> planGraph = default;
 
-            var m_SelectedStatesByHorizon = new NativeMultiHashMap<int, int>(kMaxDepth, Allocator.TempJob);
-            var predecessorStates = new NativeHashMap<int, byte>(1, Allocator.TempJob);
+            var m_SelectedStatesByHorizon = new NativeParallelMultiHashMap<int, int>(kMaxDepth, Allocator.TempJob);
+            var predecessorStates = new NativeParallelHashMap<int, byte>(1, Allocator.TempJob);
             var horizonStateList = new NativeList<int>(1, Allocator.TempJob);
 
 
