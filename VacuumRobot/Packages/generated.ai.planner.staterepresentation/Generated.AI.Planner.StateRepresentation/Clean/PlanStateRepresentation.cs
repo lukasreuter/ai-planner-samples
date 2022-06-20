@@ -10,6 +10,7 @@ using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 using Unity.Jobs;
+using HashCode = Unity.AI.Planner.HashCode;
 using PlanningAgent = Unity.AI.Planner.Traits.PlanningAgent;
 
 [assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.GraphExpansionJob<Generated.AI.Planner.StateRepresentation.Clean.StateEntityKey, Generated.AI.Planner.StateRepresentation.Clean.StateData, Generated.AI.Planner.StateRepresentation.Clean.StateDataContext, ActionKey>))]

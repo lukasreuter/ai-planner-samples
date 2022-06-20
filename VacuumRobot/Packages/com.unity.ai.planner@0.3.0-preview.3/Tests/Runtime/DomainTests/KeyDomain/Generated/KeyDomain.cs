@@ -9,6 +9,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
+using HashCode = Unity.AI.Planner.HashCode;
 
 [assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.GraphExpansionJob<KeyDomain.StateEntityKey, KeyDomain.StateData, KeyDomain.StateDataContext, ActionKey>))]
 [assembly: RegisterGenericJobType(typeof(Unity.AI.Planner.Jobs.BackpropagationJob<KeyDomain.StateEntityKey, Unity.AI.Planner.Traits.ActionKey>))]
