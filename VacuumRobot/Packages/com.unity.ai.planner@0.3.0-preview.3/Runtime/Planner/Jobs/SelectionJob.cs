@@ -248,12 +248,18 @@ namespace Unity.AI.Planner.Jobs
             {
                 AssignBudgetToResultingState(weightedBoundsRanges[i].StateKey, horizon, 1, ref data);
 
-                budget--;
-                if (budget == 0)
+                budget -= 1;
+
+                if (budget <= 0)
+                {
                     return;
+                }
             }
 
-            AssignBudgetToResultingState(weightedBoundsRanges[0].StateKey, horizon, budget, ref data);
+            if (weightedBoundsRanges.Length > 0)
+            {
+                AssignBudgetToResultingState(weightedBoundsRanges[0].StateKey, horizon, budget, ref data);
+            }
         }
 
         void AssignBudgetToResultingState(TStateKey state, int horizon, int budget, ref SelectionJobData data)
