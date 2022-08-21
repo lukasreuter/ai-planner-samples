@@ -159,9 +159,8 @@ namespace Unity.AI.Planner.Traits
         /// Create a new action key with a specified number of arguments
         /// </summary>
         /// <param name="length"></param>
-        public ActionKey(int length)
+        public ActionKey(int length) : this()
         {
-            ActionGuid = default;
             m_Length = length;
             m_Argument0 = m_Argument1 = m_Argument2 = m_Argument3 = m_Argument4 = m_Argument5 = m_Argument6 = m_Argument7 =
                 m_Argument8 = m_Argument9 = m_Argument10 = m_Argument11 = m_Argument12 = m_Argument13 = m_Argument14 = m_Argument15 = -1;
