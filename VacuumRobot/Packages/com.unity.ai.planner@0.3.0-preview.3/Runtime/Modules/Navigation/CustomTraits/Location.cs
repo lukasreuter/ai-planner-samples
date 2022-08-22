@@ -129,6 +129,7 @@ namespace Generated.Semantic.Traits
 
         void OnEnable()
         {
+            //TODO: this throws all kinds of errors when play mode options are enabled
             // Handle the case where this trait is added after conversion
             var semanticObject = GetComponent<SemanticObject>();
             if (semanticObject && !semanticObject.Entity.Equals(default))

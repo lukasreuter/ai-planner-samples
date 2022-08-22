@@ -171,7 +171,8 @@ namespace Unity.AI.Planner.Jobs
                 nextHorizon.Clear();
             }
 
-            currentHorizon.Dispose();
+            //TODO: if this is explicitly disposed while burst compiled it leads to the UnsafeUtility::Free error
+            // currentHorizon.Dispose();
             nextHorizon.Dispose();
             statesToUpdate.Dispose();
         }
