@@ -34,7 +34,7 @@ namespace UnityEditor.Semantic.Traits.CodeGen
         /// </summary>
         public static event Action<string, string> moved;
 
-        const string k_BuildMenuTitle = "Semantic/Traits/Build";
+        const string k_BuildMenuTitle = "AI/Build Traits";
 
         const string k_BuildPath = "Packages";
         static readonly string k_GeneratedPackagesPath = Path.Combine(k_BuildPath, TypeResolver.TraitsQualifier.ToLower());

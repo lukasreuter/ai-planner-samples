@@ -17,7 +17,7 @@ namespace UnityEditor.AI.Planner.CodeGen
     {
         const string k_TitleBuildPopup = "Build Planner";
 
-        const string k_BuildMenuTitle = "AI/Planner/Build";
+        const string k_BuildMenuTitle = "AI/Build Plans";
 
         const string k_StateRepresentationAssemblyFileName = TypeHelper.StateRepresentationQualifier + ".dll";
         const string k_PlansAssemblyFileName =  TypeHelper.PlansQualifier + ".dll";
