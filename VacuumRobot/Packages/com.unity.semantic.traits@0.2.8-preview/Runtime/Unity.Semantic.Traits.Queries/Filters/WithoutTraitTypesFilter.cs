@@ -25,12 +25,12 @@ namespace Unity.Semantic.Traits.Queries
             }
 
             var entityQuery = entityManager.CreateEntityQuery(TraitTypes);
-            var queryMask = entityManager.GetEntityQueryMask(entityQuery);
+            var queryMask = entityQuery.GetEntityQueryMask();
             for (var i = 0; i < entities.Length; i++)
             {
                 var entity = entities[i];
                 // Only check entities that haven't already failed queries
-                if (entitiesValid.IsSet(i) && !queryMask.Matches(entity))
+                if (entitiesValid.IsSet(i) && !queryMask.MatchesIgnoreFilter(entity))
                     entitiesValid.Set(i, false);
             }
         }

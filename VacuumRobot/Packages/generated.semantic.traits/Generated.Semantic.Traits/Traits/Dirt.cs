@@ -41,9 +41,12 @@ namespace Generated.Semantic.Traits
             }
         }
 
-        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
+        private class Baker : Baker<Dirt>
         {
-            destinationManager.AddComponent<DirtData>(entity);
+            public override void Bake(Dirt authoring)
+            {
+                AddComponent<DirtData>();
+            }
         }
 
         private void OnDestroy()

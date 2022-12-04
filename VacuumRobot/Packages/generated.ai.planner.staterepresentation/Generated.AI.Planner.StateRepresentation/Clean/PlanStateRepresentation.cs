@@ -960,28 +960,28 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         internal EntityArchetype m_StateArchetype;
         internal int JobIndex;
 
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<TraitBasedObject> TraitBasedObjects;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<TraitBasedObjectId> TraitBasedObjectIds;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<TraitBasedObject> TraitBasedObjects;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<TraitBasedObjectId> TraitBasedObjectIds;
 
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Robot> RobotData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Location> LocationData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Dirt> DirtData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Moveable> MoveableData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<PlanningAgent> PlanningAgentData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Robot> RobotData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Location> LocationData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Dirt> DirtData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Moveable> MoveableData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<PlanningAgent> PlanningAgentData;
 
         [NativeDisableContainerSafetyRestriction,ReadOnly] ObjectCorrespondence m_ObjectCorrespondence;
 
         public StateDataContext(SystemBase system, EntityArchetype stateArchetype)
         {
             EntityCommandBuffer = default;
-            TraitBasedObjects = system.GetBufferFromEntity<TraitBasedObject>(true);
-            TraitBasedObjectIds = system.GetBufferFromEntity<TraitBasedObjectId>(true);
+            TraitBasedObjects = system.GetBufferLookup<TraitBasedObject>(true);
+            TraitBasedObjectIds = system.GetBufferLookup<TraitBasedObjectId>(true);
 
-            RobotData = system.GetBufferFromEntity<Robot>(true);
-            LocationData = system.GetBufferFromEntity<Location>(true);
-            DirtData = system.GetBufferFromEntity<Dirt>(true);
-            MoveableData = system.GetBufferFromEntity<Moveable>(true);
-            PlanningAgentData = system.GetBufferFromEntity<PlanningAgent>(true);
+            RobotData = system.GetBufferLookup<Robot>(true);
+            LocationData = system.GetBufferLookup<Location>(true);
+            DirtData = system.GetBufferLookup<Dirt>(true);
+            MoveableData = system.GetBufferLookup<Moveable>(true);
+            PlanningAgentData = system.GetBufferLookup<PlanningAgent>(true);
 
             m_StateArchetype = stateArchetype;
             JobIndex = 0;
@@ -1044,7 +1044,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         }
     }
 
-    [DisableAutoCreation, AlwaysUpdateSystem]
+    [DisableAutoCreation]
     public partial class StateManager : SystemBase, ITraitBasedStateManager<TraitBasedObject, StateEntityKey, StateData, StateDataContext>
     {
         public new EntityManager EntityManager

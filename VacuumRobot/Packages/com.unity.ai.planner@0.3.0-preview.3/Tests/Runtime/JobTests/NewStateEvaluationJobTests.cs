@@ -47,7 +47,7 @@ namespace Unity.AI.Planner.Tests.Unit
         {
             var states = new NativeList<int>(0, Allocator.TempJob);
             var stateInfoLookup = new NativeParallelHashMap<int, StateInfo>(0, Allocator.TempJob);
-            var binnedStateKeys = new NativeParallelMultiHashMap<int, int>(1, Allocator.TempJob);
+            var binnedStateKeys = new NativeMultiHashMap<int, int>(1, Allocator.TempJob);
 
             var stateEvaluationJob = new EvaluateNewStatesJob<int, int, TestStateDataContext, ExceptionCumulativeRewardEstimator, ExceptionTerminationEvaluator>()
             {
@@ -70,7 +70,7 @@ namespace Unity.AI.Planner.Tests.Unit
             const int kStateCount = 10;
             var states = new NativeList<int>(kStateCount, Allocator.TempJob);
             var stateInfoLookup = new NativeParallelHashMap<int, StateInfo>(kStateCount, Allocator.TempJob);
-            var binnedStateKeys = new NativeParallelMultiHashMap<int, int>(kStateCount, Allocator.TempJob);
+            var binnedStateKeys = new NativeMultiHashMap<int, int>(kStateCount, Allocator.TempJob);
 
             for (int i = 0; i < kStateCount; i++)
             {
@@ -104,7 +104,7 @@ namespace Unity.AI.Planner.Tests.Unit
             const int kStateCount = 10;
             var states = new NativeList<int>(kStateCount, Allocator.TempJob);
             var stateInfoLookup = new NativeParallelHashMap<int, StateInfo>(kStateCount, Allocator.TempJob);
-            var binnedStateKeys = new NativeParallelMultiHashMap<int, int>(kStateCount, Allocator.TempJob);
+            var binnedStateKeys = new NativeMultiHashMap<int, int>(kStateCount, Allocator.TempJob);
 
             for (int i = 0; i < kStateCount; i++)
             {
@@ -149,7 +149,7 @@ namespace Unity.AI.Planner.Tests.Performance
 
             NativeList<int> states = default;
             NativeParallelHashMap<int, StateInfo> stateInfoLookup = default;
-            NativeParallelMultiHashMap<int, int> binnedStateKeys = default;
+            NativeMultiHashMap<int, int> binnedStateKeys = default;
 
             Measure.Method(() =>
             {
@@ -167,7 +167,7 @@ namespace Unity.AI.Planner.Tests.Performance
             {
                 states = new NativeList<int>(kStateCount, Allocator.TempJob);
                 stateInfoLookup = new NativeParallelHashMap<int, StateInfo>(kStateCount, Allocator.TempJob);
-                binnedStateKeys = new NativeParallelMultiHashMap<int, int>(kStateCount, Allocator.TempJob);
+                binnedStateKeys = new NativeMultiHashMap<int, int>(kStateCount, Allocator.TempJob);
 
                 for (int i = 0; i < kStateCount; i++)
                 {

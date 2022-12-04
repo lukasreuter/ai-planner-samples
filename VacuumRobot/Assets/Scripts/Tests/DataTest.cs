@@ -51,7 +51,7 @@ namespace Unity.AI.Planner.DataTests
         public Entity GeneratedEntity;
     }
 
-    class TestJobComponentSystem : ComponentSystem
+    partial class TestJobComponentSystem : SystemBase
     {
         protected override void OnUpdate()
         {
@@ -84,10 +84,10 @@ namespace Unity.AI.Planner.DataTests
     struct AddNumbers : IJobParallelForDefer
     {
         [ReadOnly,NativeDisableContainerSafetyRestriction]
-        public BufferFromEntity<IntData> IntBufferData;
+        public BufferLookup<IntData> IntBufferData;
 
         [ReadOnly,NativeDisableContainerSafetyRestriction]
-        public BufferFromEntity<BoolData> BoolBufferData;
+        public BufferLookup<BoolData> BoolBufferData;
 
         [ReadOnly] public NativeArray<Entity> ChosenEntities;
         [ReadOnly] public NativeArray<int> NumbersToAdd;
@@ -163,10 +163,10 @@ namespace Unity.AI.Planner.DataTests
         [ReadOnly] public NativeArray<Entity> EntitiesToAdd;
 
         [ReadOnly,NativeDisableContainerSafetyRestriction]
-        public BufferFromEntity<IntData> IntBufferData;
+        public BufferLookup<IntData> IntBufferData;
 
         [ReadOnly,NativeDisableContainerSafetyRestriction]
-        public BufferFromEntity<BoolData> BoolBufferData;
+        public BufferLookup<BoolData> BoolBufferData;
 
 
         [WriteOnly] public NativeParallelHashMap<int, Entity>.ParallelWriter IntToEntityLookup;
@@ -210,7 +210,7 @@ namespace Unity.AI.Planner.DataTests
             // setup
             var world = new World("Test World");
             var system = new TestJobComponentSystem();
-            world.AddSystem(system);
+            world.AddSystemManaged(system);
             var entityManager = world.EntityManager;
 
             // initial entity
@@ -221,8 +221,8 @@ namespace Unity.AI.Planner.DataTests
             boolBuffer.Add(new BoolData{ Value = false });
 
             // entity data
-            var intBufferFromEntity = system.GetBufferFromEntity<IntData>(isReadOnly:true);        // happens before exclusivity
-            var boolBufferFromEntity = system.GetBufferFromEntity<BoolData>(isReadOnly:true);
+            var intBufferFromEntity = system.GetBufferLookup<IntData>(isReadOnly:true);        // happens before exclusivity
+            var boolBufferFromEntity = system.GetBufferLookup<BoolData>(isReadOnly:true);
             var exclusiveEntityTransaction = entityManager.BeginExclusiveEntityTransaction();
 
             // job data containers

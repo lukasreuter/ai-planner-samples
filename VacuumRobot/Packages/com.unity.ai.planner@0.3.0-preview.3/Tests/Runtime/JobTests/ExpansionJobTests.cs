@@ -39,9 +39,9 @@ namespace Unity.AI.Planner.Tests.Unit
             m_PlanGraph.Dispose();
         }
 
-        NativeParallelMultiHashMap<int, int> GetBinnedStateKeys()
+        NativeMultiHashMap<int, int> GetBinnedStateKeys()
         {
-            var binned = new NativeParallelMultiHashMap<int, int>(m_PlanGraph.StateInfoLookup.Count(), Allocator.Persistent);
+            var binned = new NativeMultiHashMap<int, int>(m_PlanGraph.StateInfoLookup.Count(), Allocator.Persistent);
             using (var stateKeys = m_PlanGraph.StateInfoLookup.GetKeyArray(Allocator.Temp))
             {
                 foreach (var stateKey in stateKeys)
@@ -263,9 +263,9 @@ namespace Unity.AI.Planner.Tests.Performance
     [Category("Performance")]
     public class ExpansionJobPerformanceTests
     {
-        NativeParallelMultiHashMap<int, int> GetBinnedStateKeys(PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo> planGraph)
+        NativeMultiHashMap<int, int> GetBinnedStateKeys(PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo> planGraph)
         {
-            var binned = new NativeParallelMultiHashMap<int, int>(planGraph.StateInfoLookup.Count(), Allocator.Persistent);
+            var binned = new NativeMultiHashMap<int, int>(planGraph.StateInfoLookup.Count(), Allocator.Persistent);
             using (var stateKeys = planGraph.StateInfoLookup.GetKeyArray(Allocator.Temp))
             {
                 foreach (var stateKey in stateKeys)
@@ -283,7 +283,7 @@ namespace Unity.AI.Planner.Tests.Performance
             const int kActionCount = 1000;
 
             PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo> planGraph = default;
-            NativeParallelMultiHashMap<int, int> binnedStateKeys = default;
+            NativeMultiHashMap<int, int> binnedStateKeys = default;
             NativeQueue<int> newStatesQueue = default;
             NativeList<StateTransitionInfoPair<int, int, StateTransitionInfo>> statesToProcess = default;
             NativeQueue<int> newStatesToDestroy = default;
@@ -345,7 +345,7 @@ namespace Unity.AI.Planner.Tests.Performance
             const int kActionCount = 1000;
 
             PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo> planGraph = default;
-            NativeParallelMultiHashMap<int, int> binnedStateKeys = default;
+            NativeMultiHashMap<int, int> binnedStateKeys = default;
             NativeQueue<int> newStatesQueue = default;
             NativeList<StateTransitionInfoPair<int, int, StateTransitionInfo>> statesToProcess = default;
             NativeQueue<int> newStatesToDestroy = default;

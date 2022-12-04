@@ -123,11 +123,11 @@ namespace Unity.AI.Planner.Traits
 #endif
                 if (m_EntityToObjectId.TryGetValue(entity, out var traitBasedObjectId))
                 {
-                    state.AddObject(plannerTypes, out traitBasedObject, traitBasedObjectId, entityName);
+                    state.AddObject(plannerTypes.AsArray(), out traitBasedObject, traitBasedObjectId, entityName);
                 }
                 else
                 {
-                    state.AddObject(plannerTypes, out traitBasedObject, out traitBasedObjectId, entityName);
+                    state.AddObject(plannerTypes.AsArray(), out traitBasedObject, out traitBasedObjectId, entityName);
                     m_EntityToObjectId[entity] = traitBasedObjectId;
                 }
                 plannerTypes.Dispose();

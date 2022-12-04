@@ -7,6 +7,8 @@ namespace KeyDomain
     [Serializable]
     internal struct End : ITrait, IBufferElementData, IEquatable<End>
     {
+        public bool dummy;
+
         public object GetField(string fieldName)
         {
             return null;

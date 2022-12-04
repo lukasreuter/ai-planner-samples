@@ -1,12 +1,12 @@
 {
     "name": "Generated.AI.Planner.StateRepresentation",
+    "rootNamespace": "",
     "references": [
         "Unity.Semantic.Traits",
         "Generated.Semantic.Traits",
         "Unity.AI.Planner",
         "Unity.Entities",
         "Unity.Collections",
-        "Unity.Jobs",
         "Unity.Burst"
     ],
     "includePlatforms": [],

@@ -186,16 +186,19 @@ namespace {{ namespace }}
             }
         }
 
-        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
+        private class Baker : Baker<{{ name }}>
         {
-            {{- if fields.empty? }}
-            destinationManager.AddComponent<{{ name }}Data>(entity);
-            {{- else }}
-            destinationManager.AddComponentData(entity, GetData());
-            {{- if $has_relations }}
-            StartCoroutine(UpdateRelations());
-            {{- end }}
-            {{- end }}
+            public override void Bake({{ name }} authoring)
+            {
+                {{- if fields.empty? }}
+                AddComponent<{{ name }}Data>();
+                {{- else }}
+                AddComponentData(entity, GetData());
+                {{- if $has_relations }}
+                StartCoroutine(UpdateRelations());
+                {{- end }}
+                {{- end }}
+            }
         }
 
         private void OnDestroy()

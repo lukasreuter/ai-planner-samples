@@ -1,15 +1,15 @@
 {
     "name": "Tests",
+    "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Generated.AI.Planner.Plans",
         "Generated.AI.Planner.StateRepresentation",
-        "Generated.AI.Traits",
+        "Generated.Semantic.Traits",
         "Unity.Collections",
         "Unity.Entities",
-        "Unity.Burst",
-        "Unity.Jobs"
+        "Unity.Burst"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

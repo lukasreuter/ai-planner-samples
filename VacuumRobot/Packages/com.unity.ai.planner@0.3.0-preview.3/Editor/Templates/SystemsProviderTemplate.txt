@@ -27,7 +27,7 @@ namespace {{ namespace }}
         public void Initialize(ProblemDefinition problemDefinition, string planningSimulationWorldName)
         {
             var world = new World(planningSimulationWorldName);
-            var stateManager = world.GetOrCreateSystem<StateManager>();
+            var stateManager = world.GetOrCreateSystemManaged<StateManager>();
 
             m_StateConverter = new PlannerStateConverter<TraitBasedObject, StateEntityKey, StateData, StateDataContext, StateManager>(problemDefinition, stateManager);
 

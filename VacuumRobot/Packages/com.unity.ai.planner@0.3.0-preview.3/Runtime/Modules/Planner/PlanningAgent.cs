@@ -9,6 +9,8 @@ namespace Unity.AI.Planner.Traits
     /// </summary>
     public struct PlanningAgent : ICustomTrait, IBufferElementData, IEquatable<PlanningAgent>
     {
+        public bool dummy;
+
         /// <summary>
         /// GetField is deprecated. Cast the trait to the appropriate type, then access the field.
         /// </summary>

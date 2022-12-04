@@ -48,7 +48,7 @@ namespace Unity.AI.Planner.Tests
                 // holding on SharedComponentData making checks fail
                 while (World.Systems.Count > 0)
                 {
-                    World.DestroySystem(World.Systems[0]);
+                    World.DestroySystem(World.Systems[0].SystemHandle);
                 }
                 m_ManagerDebug.CheckInternalConsistency();
 

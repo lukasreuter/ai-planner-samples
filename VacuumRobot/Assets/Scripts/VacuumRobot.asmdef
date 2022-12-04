@@ -1,8 +1,9 @@
 {
     "name": "VacuumRobot",
+    "rootNamespace": "",
     "references": [
-        "GUID:5d7abd49047cd6749bac9593cc354ad1",
-        "GUID:60870cbb771f86242bc12088f98e8d91"
+        "Unity.AI.Planner",
+        "Generated.Semantic.Traits"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

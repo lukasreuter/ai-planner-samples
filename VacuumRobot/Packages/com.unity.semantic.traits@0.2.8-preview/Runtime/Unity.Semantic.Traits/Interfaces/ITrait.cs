@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace Unity.Semantic.Traits
 {
-	interface ITrait : ITraitConversion, IConvertGameObjectToEntity
+	interface ITrait : ITraitConversion
 	{
 	}
 }

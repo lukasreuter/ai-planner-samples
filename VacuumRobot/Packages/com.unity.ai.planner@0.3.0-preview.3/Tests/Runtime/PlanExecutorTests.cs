@@ -42,8 +42,8 @@ namespace Unity.AI.Planner.Tests.Integration
         public void SetUp()
         {
             var world = new World("TestWorld");
-            m_StateManager = world.GetOrCreateSystem<StateManager>();
-            world.GetOrCreateSystem<SimulationSystemGroup>().AddSystemToUpdateList(m_StateManager);
+            m_StateManager = world.GetOrCreateSystemManaged<StateManager>();
+            world.GetOrCreateSystemManaged<SimulationSystemGroup>().AddSystemToUpdateList(m_StateManager);
 
             KeyDomainUtility.Initialize(world);
             m_Actor = new GameObject("TestGameObject").AddComponent<MockMonoBehaviour>();

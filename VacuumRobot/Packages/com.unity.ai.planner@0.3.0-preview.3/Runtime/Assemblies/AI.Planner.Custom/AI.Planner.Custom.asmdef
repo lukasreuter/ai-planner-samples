@@ -1,9 +1,9 @@
 {
     "name": "AI.Planner.Custom",
+    "rootNamespace": "",
     "references": [
         "Unity.AI.Planner",
         "Unity.Entities",
-        "Unity.Jobs",
         "Unity.Burst",
         "Unity.Collections",
         "Unity.Mathematics",

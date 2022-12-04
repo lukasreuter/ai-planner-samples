@@ -178,7 +178,7 @@ namespace Generated.AI.Planner.Plans.Clean
             // fixups
             var stateEntity = stateEntityKey.Entity;
             var fixupBuffer = m_StateDataContext.EntityCommandBuffer.AddBuffer<NavigateFixupReference>(jobIndex, stateEntity);
-            fixupBuffer.CopyFrom(TransitionInfo);
+            fixupBuffer.CopyFrom(TransitionInfo.AsArray());
         }
 
         

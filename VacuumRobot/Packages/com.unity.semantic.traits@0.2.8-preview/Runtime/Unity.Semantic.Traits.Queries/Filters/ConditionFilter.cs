@@ -13,7 +13,7 @@ namespace Unity.Semantic.Traits.Queries
     /// </summary>
     /// <typeparam name="T">Trait type</typeparam>
     [Serializable]
-    public struct ConditionFilter<T> : IQueryFilter where T : struct, ITraitData
+    public struct ConditionFilter<T> : IQueryFilter where T : unmanaged, ITraitData
     {
         /// <summary>
         /// Delegate used for validating an object
@@ -63,7 +63,10 @@ namespace Unity.Semantic.Traits.Queries
         /// <param name="comparer">Delegate function</param>
         /// <typeparam name="T">Trait type</typeparam>
         /// <returns>Updated query object with the filter added</returns>
-        public static TraitQuery Where<T>(this TraitQuery traitQuery, T referenceData, ConditionFilter<T>.ValidComparer comparer) where T : struct, ITraitData
+        public static TraitQuery Where<T>(
+            this TraitQuery traitQuery,
+            T referenceData,
+            ConditionFilter<T>.ValidComparer comparer) where T : unmanaged, ITraitData
         {
             return traitQuery.WithTraitTypes<T>().WithFilter(new ConditionFilter<T>
             {
@@ -79,7 +82,8 @@ namespace Unity.Semantic.Traits.Queries
         /// <param name="comparer">Delegate function</param>
         /// <typeparam name="T">Trait type</typeparam>
         /// <returns>Updated query object with the filter added</returns>
-        public static TraitQuery Where<T>(this TraitQuery traitQuery, ConditionFilter<T>.ValidComparer comparer) where T : struct, ITraitData
+        public static TraitQuery Where<T>(this TraitQuery traitQuery, ConditionFilter<T>.ValidComparer comparer)
+            where T : unmanaged, ITraitData
         {
             // This extension would likely be used for closures, which will allocate memory, unfortunately
             return traitQuery.WithTraitTypes<T>().WithFilter(new ConditionFilter<T>

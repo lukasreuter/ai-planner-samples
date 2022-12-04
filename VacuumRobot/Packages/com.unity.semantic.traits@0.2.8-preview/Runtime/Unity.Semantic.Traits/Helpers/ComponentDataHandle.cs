@@ -3,7 +3,7 @@ using Unity.Entities;
 using UnityEngine;
 
 [Serializable]
-class ComponentDataHandle<T> where T : struct, IComponentData
+class ComponentDataHandle<T> where T : unmanaged, IComponentData
 {
     public T Data
     {

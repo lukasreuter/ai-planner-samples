@@ -13,9 +13,9 @@ namespace Unity.AI.Planner
         where TStateTransitionInfo : unmanaged
     {
         // Graph structure
-        public NativeParallelMultiHashMap<TStateKey, TActionKey> ActionLookup;
-        public NativeParallelMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey> ResultingStateLookup;
-        public NativeParallelMultiHashMap<TStateKey, TStateKey> PredecessorGraph;
+        public NativeMultiHashMap<TStateKey, TActionKey> ActionLookup;
+        public NativeMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey> ResultingStateLookup;
+        public NativeMultiHashMap<TStateKey, TStateKey> PredecessorGraph;
 
         // Graph info
         public NativeParallelHashMap<TStateKey, TStateInfo> StateInfoLookup;
@@ -27,9 +27,9 @@ namespace Unity.AI.Planner
 
         public PlanGraph(int stateCapacity, int actionCapacity, int transitionCapacity)
         {
-            ActionLookup = new NativeParallelMultiHashMap<TStateKey, TActionKey>(actionCapacity, Allocator.Persistent);
-            ResultingStateLookup = new NativeParallelMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey>(transitionCapacity, Allocator.Persistent);
-            PredecessorGraph = new NativeParallelMultiHashMap<TStateKey, TStateKey>(transitionCapacity, Allocator.Persistent);
+            ActionLookup = new NativeMultiHashMap<TStateKey, TActionKey>(actionCapacity, Allocator.Persistent);
+            ResultingStateLookup = new NativeMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey>(transitionCapacity, Allocator.Persistent);
+            PredecessorGraph = new NativeMultiHashMap<TStateKey, TStateKey>(transitionCapacity, Allocator.Persistent);
 
             StateInfoLookup = new NativeParallelHashMap<TStateKey, TStateInfo>(stateCapacity, Allocator.Persistent);
             ActionInfoLookup = new NativeParallelHashMap<StateActionPair<TStateKey, TActionKey>, TActionInfo>(actionCapacity, Allocator.Persistent);
@@ -126,9 +126,9 @@ namespace Unity.AI.Planner
         public struct ParallelWriter
         {
             // Graph structure
-            public NativeParallelMultiHashMap<TStateKey, TActionKey>.ParallelWriter ActionLookup;
-            public NativeParallelMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey>.ParallelWriter ResultingStateLookup;
-            public NativeParallelMultiHashMap<TStateKey, TStateKey>.ParallelWriter PredecessorGraph;
+            public NativeMultiHashMap<TStateKey, TActionKey>.ParallelWriter ActionLookup;
+            public NativeMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey>.ParallelWriter ResultingStateLookup;
+            public NativeMultiHashMap<TStateKey, TStateKey>.ParallelWriter PredecessorGraph;
 
             // Graph info
             public NativeParallelHashMap<TStateKey, TStateInfo>.ParallelWriter StateInfoLookup;

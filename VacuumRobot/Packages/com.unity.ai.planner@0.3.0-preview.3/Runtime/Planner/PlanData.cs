@@ -15,7 +15,7 @@ namespace Unity.AI.Planner
         // Info for planning
         public TStateKey RootStateKey { get; internal set; }
         public NativeParallelHashMap<TStateKey, int> StateDepthLookup;
-        public NativeParallelMultiHashMap<int, TStateKey> BinnedStateKeyLookup;
+        public NativeMultiHashMap<int, TStateKey> BinnedStateKeyLookup;
         public PlanGraph<TStateKey, StateInfo, TActionKey, ActionInfo, StateTransitionInfo> PlanGraph;
 
         internal TStateManager m_StateManager;
@@ -27,7 +27,7 @@ namespace Unity.AI.Planner
             m_StateManager = stateManager;
 
             StateDepthLookup = new NativeParallelHashMap<TStateKey, int>(stateCapacity, Allocator.Persistent);
-            BinnedStateKeyLookup = new NativeParallelMultiHashMap<int, TStateKey>(stateCapacity, Allocator.Persistent);
+            BinnedStateKeyLookup = new NativeMultiHashMap<int, TStateKey>(stateCapacity, Allocator.Persistent);
             PlanGraph = new PlanGraph<TStateKey, StateInfo, TActionKey, ActionInfo, StateTransitionInfo>(stateCapacity, actionCapacity, transitionCapacity);
         }
 

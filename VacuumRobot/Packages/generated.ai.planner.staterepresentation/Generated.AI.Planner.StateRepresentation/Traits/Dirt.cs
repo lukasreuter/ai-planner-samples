@@ -9,6 +9,7 @@ namespace Generated.AI.Planner.StateRepresentation
     [Serializable]
     public struct Dirt : ITrait, IBufferElementData, IEquatable<Dirt>
     {
+        private byte dummy; // needed as empty buffer elements throw errors in the type manager
 
         public void SetField(string fieldName, object value)
         {

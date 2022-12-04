@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using Unity.Semantic.Traits;
 using Unity.Entities;
 using UnityEngine;
@@ -165,12 +166,12 @@ namespace Generated.Semantic.Traits
         /// <summary>
         /// Converts and assigns the monobehaviour trait component data to the entity representation.
         /// </summary>
-        /// <param name="entity">The entity on which the trait data is to be assigned.</param>
-        /// <param name="destinationManager">The entity manager for the given entity.</param>
-        /// <param name="_">An unused GameObjectConversionSystem parameter, needed for IConvertGameObjectToEntity.</param>
-        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
+        private class Baker : Baker<Location>
         {
-            destinationManager.AddComponentData(entity, GetData());
+            public override void Bake(Location authoring)
+            {
+                AddComponent(authoring.GetData());
+            }
         }
 
         private void OnDestroy()

@@ -33,7 +33,7 @@ namespace Unity.Semantic.Traits.Queries.Tests
                 // holding on SharedComponentData making checks fail
                 while (World.Systems.Count > 0)
                 {
-                    World.DestroySystem(World.Systems[0]);
+                    World.DestroySystem(World.Systems[0].SystemHandle);
                 }
 
                 m_ManagerDebug.CheckInternalConsistency();
@@ -47,7 +47,7 @@ namespace Unity.Semantic.Traits.Queries.Tests
             }
         }
 
-        class EntityForEachSystem : ComponentSystem
+        partial class EntityForEachSystem : SystemBase
         {
             protected override void OnUpdate() {  }
         }

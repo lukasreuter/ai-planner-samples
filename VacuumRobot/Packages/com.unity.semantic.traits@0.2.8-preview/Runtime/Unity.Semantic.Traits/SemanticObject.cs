@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using JetBrains.Annotations;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Unity.Semantic.Traits
@@ -8,7 +9,7 @@ namespace Unity.Semantic.Traits
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu(Constants.MenuName + "/Semantic Object")]
-    public class SemanticObject : MonoBehaviour, IConvertGameObjectToEntity
+    public class SemanticObject : MonoBehaviour
     {
         [SerializeField]
         bool m_EnableTraitInspectors = true;
@@ -59,11 +60,18 @@ namespace Unity.Semantic.Traits
             destinationManager.AddComponentObject(entity, transform);
         }
 
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem _)
+        private sealed class Baker : Baker<SemanticObject>
         {
-            dstManager.AddComponentData(entity, new SemanticID(gameObject));
-            dstManager.AddComponent<SemanticObjectData>(entity);
-            dstManager.AddComponentObject(entity, transform);
+            public override void Bake(SemanticObject authoring)
+            {
+                DependsOn(authoring.gameObject);
+                AddComponent(new SemanticID
+                {
+                    instanceID = authoring.gameObject.GetInstanceID(),
+                });
+                AddComponent<SemanticObjectData>();
+                AddComponentObject(GetComponent<Transform>());
+            }
         }
 
         private void OnDestroy()

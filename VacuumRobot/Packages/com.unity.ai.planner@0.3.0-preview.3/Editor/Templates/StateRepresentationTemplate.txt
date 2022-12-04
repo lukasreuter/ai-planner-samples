@@ -852,10 +852,10 @@ namespace {{ namespace }}
         internal EntityArchetype m_StateArchetype;
         internal int JobIndex;
 
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<TraitBasedObject> TraitBasedObjects;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<TraitBasedObjectId> TraitBasedObjectIds;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<TraitBasedObject> TraitBasedObjects;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<TraitBasedObjectId> TraitBasedObjectIds;
         {{~ for trait in trait_list }}
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<{{trait.name}}> {{trait.name}}Data;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<{{trait.name}}> {{trait.name}}Data;
         {{- end }}
 
         [NativeDisableContainerSafetyRestriction,ReadOnly] ObjectCorrespondence m_ObjectCorrespondence;
@@ -863,10 +863,10 @@ namespace {{ namespace }}
         public StateDataContext(SystemBase system, EntityArchetype stateArchetype)
         {
             EntityCommandBuffer = default;
-            TraitBasedObjects = system.GetBufferFromEntity<TraitBasedObject>(true);
-            TraitBasedObjectIds = system.GetBufferFromEntity<TraitBasedObjectId>(true);
+            TraitBasedObjects = system.GetBufferLookup<TraitBasedObject>(true);
+            TraitBasedObjectIds = system.GetBufferLookup<TraitBasedObjectId>(true);
             {{~ for trait in trait_list }}
-            {{trait.name}}Data = system.GetBufferFromEntity<{{trait.name}}>(true);
+            {{trait.name}}Data = system.GetBufferLookup<{{trait.name}}>(true);
             {{- end }}
 
             m_StateArchetype = stateArchetype;
@@ -927,7 +927,7 @@ namespace {{ namespace }}
         }
     }
 
-    [DisableAutoCreation, AlwaysUpdateSystem]
+    [DisableAutoCreation]
     public partial class StateManager : SystemBase, ITraitBasedStateManager<TraitBasedObject, StateEntityKey, StateData, StateDataContext>
     {
         public new EntityManager EntityManager

@@ -1101,26 +1101,26 @@ namespace KeyDomain
         internal EntityArchetype m_StateArchetype;
         internal int JobIndex;
 
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<TraitBasedObject> TraitBasedObjects;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<TraitBasedObjectId> TraitBasedObjectIds;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Colored> ColoredData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Carrier> CarrierData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Carriable> CarriableData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Localized> LocalizedData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<Lockable> LockableData;
-        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferFromEntity<End> EndData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<TraitBasedObject> TraitBasedObjects;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<TraitBasedObjectId> TraitBasedObjectIds;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Colored> ColoredData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Carrier> CarrierData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Carriable> CarriableData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Localized> LocalizedData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<Lockable> LockableData;
+        [ReadOnly,NativeDisableContainerSafetyRestriction] public BufferLookup<End> EndData;
 
         public StateDataContext(SystemBase system, EntityArchetype stateArchetype)
         {
             EntityCommandBuffer = default;
-            TraitBasedObjects = system.GetBufferFromEntity<TraitBasedObject>(true);
-            TraitBasedObjectIds = system.GetBufferFromEntity<TraitBasedObjectId>(true);
-            ColoredData = system.GetBufferFromEntity<Colored>(true);
-            CarrierData = system.GetBufferFromEntity<Carrier>(true);
-            CarriableData = system.GetBufferFromEntity<Carriable>(true);
-            LocalizedData = system.GetBufferFromEntity<Localized>(true);
-            LockableData = system.GetBufferFromEntity<Lockable>(true);
-            EndData = system.GetBufferFromEntity<End>(true);
+            TraitBasedObjects = system.GetBufferLookup<TraitBasedObject>(true);
+            TraitBasedObjectIds = system.GetBufferLookup<TraitBasedObjectId>(true);
+            ColoredData = system.GetBufferLookup<Colored>(true);
+            CarrierData = system.GetBufferLookup<Carrier>(true);
+            CarriableData = system.GetBufferLookup<Carriable>(true);
+            LocalizedData = system.GetBufferLookup<Localized>(true);
+            LockableData = system.GetBufferLookup<Lockable>(true);
+            EndData = system.GetBufferLookup<End>(true);
 
             m_StateArchetype = stateArchetype;
             JobIndex = 0;

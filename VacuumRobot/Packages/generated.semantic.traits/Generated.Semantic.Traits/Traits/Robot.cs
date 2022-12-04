@@ -41,9 +41,12 @@ namespace Generated.Semantic.Traits
             }
         }
 
-        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
+        private class Baker : Baker<Robot>
         {
-            destinationManager.AddComponent<RobotData>(entity);
+            public override void Bake(Robot authoring)
+            {
+                AddComponent<RobotData>();
+            }
         }
 
         private void OnDestroy()

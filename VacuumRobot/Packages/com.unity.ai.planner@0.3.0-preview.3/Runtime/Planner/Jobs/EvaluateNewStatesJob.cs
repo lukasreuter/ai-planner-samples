@@ -23,7 +23,7 @@ namespace Unity.AI.Planner.Jobs
 
         // Output
         [WriteOnly] public NativeParallelHashMap<TStateKey, StateInfo>.ParallelWriter StateInfoLookup;
-        [WriteOnly] public NativeParallelMultiHashMap<int, TStateKey>.ParallelWriter BinnedStateKeys;
+        [WriteOnly] public NativeMultiHashMap<int, TStateKey>.ParallelWriter BinnedStateKeys;
 
         public void Execute(int index)
         {

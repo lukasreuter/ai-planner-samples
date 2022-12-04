@@ -31,9 +31,7 @@ namespace UnityEditor.AI.Planner.CodeGen
         internal static readonly string[] predefinedReferences = {
                 "Library/ScriptAssemblies/Unity.Collections.dll",
                 "Library/ScriptAssemblies/Unity.Entities.dll",
-                "Library/ScriptAssemblies/Unity.Properties.dll",
-                "Library/ScriptAssemblies/Unity.Jobs.dll",
-                "Library/ScriptAssemblies/Unity.AI.Planner.dll"
+                "Library/ScriptAssemblies/Unity.AI.Planner.dll",
             };
 
         [InitializeOnLoadMethod]

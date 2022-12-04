@@ -9,6 +9,7 @@ namespace Generated.AI.Planner.StateRepresentation
     [Serializable]
     public struct Moveable : ITrait, IBufferElementData, IEquatable<Moveable>
     {
+        private byte dummy; // needed as empty buffer elements throw errors in the type manager
 
         public void SetField(string fieldName, object value)
         {

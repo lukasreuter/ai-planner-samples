@@ -1,14 +1,11 @@
 {
     "name": "Unity.AI.Planner",
+    "rootNamespace": "",
     "references": [
         "Unity.Collections",
         "Unity.Entities",
         "Unity.Mathematics",
-        "Unity.Jobs",
-        "Unity.FullDotNet",
-        "Unity.Tiny.Debugging",
         "Unity.Burst",
-        "Unity.DynamicStructs",
         "Unity.Entities.Hybrid",
         "Unity.Transforms",
         "Unity.Semantic.Traits",

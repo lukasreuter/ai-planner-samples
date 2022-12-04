@@ -28,7 +28,7 @@ namespace KeyDomain
         {
             RoomArchetype = new ComponentType[]{ ComponentType.ReadWrite<Lockable>(), ComponentType.ReadWrite<Colored>(), ComponentType.ReadWrite<TraitBasedObjectId>() };
 
-            StateManager = world.GetOrCreateSystem<StateManager>();
+            StateManager = world.GetOrCreateSystemManaged<StateManager>();
             var stateData = StateManager.CreateStateData();
 
             (BlackKey, BlackKeyId) = CreateKey(stateData, ColorValue.Black);

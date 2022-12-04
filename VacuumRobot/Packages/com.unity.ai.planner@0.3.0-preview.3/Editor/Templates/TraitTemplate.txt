@@ -12,6 +12,10 @@ namespace {{ namespace }}
     [Serializable]
     public struct {{ name }} : ITrait, IBufferElementData, IEquatable<{{ name }}>
     {
+        {{- if fields.empty? }}
+        private byte dummy; // needed as empty buffer elements throw errors in the type manager
+        {{- end }}
+
         {{- for field in fields }}
         public const string Field{{ field.field_name }} = "{{ field.field_name }}";
         {{- end }}

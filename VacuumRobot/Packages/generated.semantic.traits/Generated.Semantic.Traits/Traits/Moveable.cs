@@ -41,9 +41,12 @@ namespace Generated.Semantic.Traits
             }
         }
 
-        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
+        private class Baker : Baker<Moveable>
         {
-            destinationManager.AddComponent<MoveableData>(entity);
+            public override void Bake(Moveable authoring)
+            {
+                AddComponent<MoveableData>();
+            }
         }
 
         private void OnDestroy()

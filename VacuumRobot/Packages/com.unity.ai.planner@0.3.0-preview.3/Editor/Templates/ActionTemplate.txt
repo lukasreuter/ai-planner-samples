@@ -248,7 +248,7 @@ namespace {{ namespace }}
             // fixups
             var stateEntity = stateEntityKey.Entity;
             var fixupBuffer = m_StateDataContext.EntityCommandBuffer.AddBuffer<{{ action_name }}FixupReference>(jobIndex, stateEntity);
-            fixupBuffer.CopyFrom(TransitionInfo);
+            fixupBuffer.CopyFrom(TransitionInfo.AsArray());
         }
 
         {{ for p in parameter_list }}

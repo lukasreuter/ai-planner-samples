@@ -34,11 +34,11 @@ namespace Unity.AI.Planner.Jobs
         [ReadOnly] public NativeParallelHashMap<TStateKey, StateInfo> StateInfoLookup;
         [ReadOnly] public NativeParallelHashMap<StateActionPair<TStateKey, TActionKey>, ActionInfo> ActionInfoLookup;
         [ReadOnly] public TStateKey RootStateKey;
-        [ReadOnly] public NativeParallelMultiHashMap<TStateKey, TActionKey> ActionLookup;
-        [ReadOnly] public NativeParallelMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey> ResultingStateLookup;
+        [ReadOnly] public NativeMultiHashMap<TStateKey, TActionKey> ActionLookup;
+        [ReadOnly] public NativeMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey> ResultingStateLookup;
         [ReadOnly] public NativeParallelHashMap<StateTransition<TStateKey, TActionKey>, StateTransitionInfo> StateTransitionInfoLookup;
 
-        [WriteOnly] public NativeParallelMultiHashMap<TStateKey, int> AllSelectedStates;
+        [WriteOnly] public NativeMultiHashMap<TStateKey, int> AllSelectedStates;
         [WriteOnly] public NativeList<TStateKey> SelectedUnexpandedStates;
 
 
@@ -92,7 +92,7 @@ namespace Unity.AI.Planner.Jobs
             public NativeList<StateActionPairUpperBoundInfo> NonDominatedActions;
             public NativeList<StateBoundsRange> WeightedBoundsRanges;
             public NativeParallelHashMap<StateHorizonPair, int> StateHorizonBudgets;
-            public NativeParallelMultiHashMap<int, TStateKey> QueuedStatesByHorizon;
+            public NativeMultiHashMap<int, TStateKey> QueuedStatesByHorizon;
             public int MaxHorizon;
 
             public SelectionJobData(int size)
@@ -101,7 +101,7 @@ namespace Unity.AI.Planner.Jobs
                 NonDominatedActions = new NativeList<StateActionPairUpperBoundInfo>(size, Allocator.Temp);
                 WeightedBoundsRanges = new NativeList<StateBoundsRange>(size, Allocator.Temp);
                 StateHorizonBudgets = new NativeParallelHashMap<StateHorizonPair, int>(size, Allocator.Temp);
-                QueuedStatesByHorizon = new NativeParallelMultiHashMap<int, TStateKey>(size, Allocator.Temp);
+                QueuedStatesByHorizon = new NativeMultiHashMap<int, TStateKey>(size, Allocator.Temp);
                 MaxHorizon = int.MinValue;
             }
         }
@@ -296,9 +296,9 @@ namespace Unity.AI.Planner.Jobs
 
         [WriteOnly] public NativeList<TStateKey> SelectionInputStates;
         [WriteOnly] public NativeList<int>  SelectionInputBudgets;
-        public NativeParallelMultiHashMap<TStateKey, int> OutputStateBudgets;
+        public NativeMultiHashMap<TStateKey, int> OutputStateBudgets;
         public NativeParallelHashMap<TStateKey, byte> SelectedUnexpandedStates;
-        public NativeParallelMultiHashMap<TStateKey, int> AllSelectedStates;
+        public NativeMultiHashMap<TStateKey, int> AllSelectedStates;
 
         public void Execute()
         {
@@ -322,8 +322,8 @@ namespace Unity.AI.Planner.Jobs
         [ReadOnly] public NativeParallelHashMap<TStateKey, int> StateDepthLookup;
         [ReadOnly] public NativeParallelHashMap<TStateKey, StateInfo> StateInfoLookup;
         [ReadOnly] public NativeParallelHashMap<StateActionPair<TStateKey, TActionKey>, ActionInfo> ActionInfoLookup;
-        [ReadOnly] public NativeParallelMultiHashMap<TStateKey, TActionKey> ActionLookup;
-        [ReadOnly] public NativeParallelMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey> ResultingStateLookup;
+        [ReadOnly] public NativeMultiHashMap<TStateKey, TActionKey> ActionLookup;
+        [ReadOnly] public NativeMultiHashMap<StateActionPair<TStateKey, TActionKey>, TStateKey> ResultingStateLookup;
         [ReadOnly] public NativeParallelHashMap<StateTransition<TStateKey, TActionKey>, StateTransitionInfo> StateTransitionInfoLookup;
 
         // Inputs
@@ -332,8 +332,8 @@ namespace Unity.AI.Planner.Jobs
         [ReadOnly] public NativeArray<int> InputBudgets;
 
         // Outputs
-        [WriteOnly] public NativeParallelMultiHashMap<TStateKey, int>.ParallelWriter OutputStateBudgets;
-        [WriteOnly] public NativeParallelMultiHashMap<TStateKey, int>.ParallelWriter SelectedStateHorizons;
+        [WriteOnly] public NativeMultiHashMap<TStateKey, int>.ParallelWriter OutputStateBudgets;
+        [WriteOnly] public NativeMultiHashMap<TStateKey, int>.ParallelWriter SelectedStateHorizons;
         [WriteOnly] public NativeParallelHashMap<TStateKey, byte>.ParallelWriter SelectedUnexpandedStates;
 
         // Local containers
@@ -497,7 +497,7 @@ namespace Unity.AI.Planner.Jobs
         where TStateKey : unmanaged, IEquatable<TStateKey>
     {
         // Inputs
-        public NativeParallelMultiHashMap<TStateKey, int> InputStateBudgets;
+        public NativeMultiHashMap<TStateKey, int> InputStateBudgets;
 
         // Outputs
         [WriteOnly] public NativeList<TStateKey> OutputStates;

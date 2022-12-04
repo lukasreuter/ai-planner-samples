@@ -28,7 +28,7 @@ namespace Unity.AI.Traits.Tests
             base.Setup();
 
             KeyDomainUtility.Initialize(World);
-            m_StateManager = World.GetOrCreateSystem<StateManager>();
+            m_StateManager = World.GetOrCreateSystemManaged<StateManager>();
 
             ScriptBehaviourUpdateOrder.AppendWorldToCurrentPlayerLoop(World);
         }
