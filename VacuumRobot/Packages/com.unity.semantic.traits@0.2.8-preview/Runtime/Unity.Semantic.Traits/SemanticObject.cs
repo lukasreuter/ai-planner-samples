@@ -1,6 +1,4 @@
-﻿using System;
-using Unity.Entities;
-using Unity.Entities.Hybrid.Extensions;
+﻿using Unity.Entities;
 using UnityEngine;
 
 namespace Unity.Semantic.Traits
@@ -8,7 +6,6 @@ namespace Unity.Semantic.Traits
     /// <summary>
     /// Component used on objects that contain Traits
     /// </summary>
-    [ExecuteAlways]
     [DisallowMultipleComponent]
     [AddComponentMenu(Constants.MenuName + "/Semantic Object")]
     public class SemanticObject : MonoBehaviour, IConvertGameObjectToEntity
@@ -19,12 +16,14 @@ namespace Unity.Semantic.Traits
         /// <summary>
         /// Entity Manager
         /// </summary>
-        public EntityManager EntityManager => m_EntityManager;
+        public static EntityManager EntityManager => World.EntityManager;
+
+        public static World World => World.DefaultGameObjectInjectionWorld;
 
         /// <summary>
         /// Parent object entity
         /// </summary>
-        public Entity Entity => m_Entity;
+        public Entity Entity { get; private set; }
 
         internal bool EnableTraitInspectors
         {
@@ -32,51 +31,56 @@ namespace Unity.Semantic.Traits
             set => m_EnableTraitInspectors = value;
         }
 
-        EntityManager m_EntityManager;
-        World m_World;
-        Entity m_Entity;
-
         /// <summary>
         /// Convert SemanticObject component to a SemanticObjectData on this object entity
         /// </summary>
-        /// <param name="entity">Current Entity</param>
-        /// <param name="destinationManager">Current EntityManager</param>
-        /// <param name="conversionSystem">System that is used for this conversion</param>
-        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem conversionSystem)
+        public void Start()
         {
-            if (!destinationManager.HasComponent(entity, typeof(SemanticObjectData)))
+            if (GetComponent<RuntimeConvertTraits>() == null)
             {
-                m_Entity = entity;
-                m_EntityManager = destinationManager;
-                m_World = destinationManager.World;
-
-                destinationManager.AddComponent<SemanticObjectData>(entity);
-                destinationManager.AddComponentObject(entity, transform);
+                return;
             }
+
+            var destinationManager = EntityManager;
+            var semanticID = new SemanticID(gameObject);
+
+            var result = SemanticIDSystem.FindSemanticID(semanticID, destinationManager);
+
+            var entity = result == Entity.Null
+                ? destinationManager.CreateEntity()
+                : result;
+
+            destinationManager.SetName(entity, $"{gameObject.name} Traits");
+
+            Entity = entity;
+
+            destinationManager.AddComponentData(entity, new SemanticID(gameObject));
+            destinationManager.AddComponent<SemanticObjectData>(entity);
+            destinationManager.AddComponentObject(entity, transform);
         }
 
-        void OnDestroy()
+        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem _)
         {
-            if (m_World != default &&  m_World.IsCreated)
+            dstManager.AddComponentData(entity, new SemanticID(gameObject));
+            dstManager.AddComponent<SemanticObjectData>(entity);
+            dstManager.AddComponentObject(entity, transform);
+        }
+
+        private void OnDestroy()
+        {
+            if (World is not { IsCreated: true })
             {
-                m_EntityManager.RemoveComponent<Transform>(m_Entity);
-                m_EntityManager.RemoveComponent<SemanticObjectData>(m_Entity);
-
-                if (m_EntityManager.GetComponentCount(m_Entity) == 0)
-                    m_EntityManager.DestroyEntity(m_Entity);
+                return;
             }
-        }
 
-        void OnValidate()
-        {
-            Invoke(nameof(AddEntityConverter), float.Epsilon);
-        }
+            EntityManager.RemoveComponent<Transform>(Entity);
+            EntityManager.RemoveComponent<SemanticObjectData>(Entity);
+            EntityManager.RemoveComponent<SemanticID>(Entity);
 
-        void AddEntityConverter()
-        {
-            // Since a developer may want to use ConvertToEntity instead of MirrorAsEntity we can't enforce using [RequireComponent]
-            if (!GetComponent<MirrorAsEntity>() && !GetComponent<ConvertToEntity>())
-                gameObject.AddComponent<MirrorAsEntity>();
+            if (EntityManager.GetComponentCount(Entity) == 0)
+            {
+                EntityManager.DestroyEntity(Entity);
+            }
         }
     }
 }

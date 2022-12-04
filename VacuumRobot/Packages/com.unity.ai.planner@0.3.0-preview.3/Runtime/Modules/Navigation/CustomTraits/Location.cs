@@ -8,7 +8,7 @@ namespace Generated.Semantic.Traits
     /// <summary>
     /// Component representing the Location trait.
     /// </summary>
-    [ExecuteAlways]
+    //[ExecuteAlways]
     [DisallowMultipleComponent]
     [AddComponentMenu("Semantic/Traits/Location (Trait)")]
     [RequireComponent(typeof(SemanticObject))]
@@ -22,14 +22,15 @@ namespace Generated.Semantic.Traits
             get { return m_p338023941; }
             set
             {
+                var em = SemanticObject.EntityManager;
                 LocationData data = default;
-                var dataActive = m_EntityManager != default && m_EntityManager.HasComponent<LocationData>(m_Entity);
+                var dataActive = em.HasComponent<LocationData>(m_Entity);
                 if (dataActive)
-                    data = m_EntityManager.GetComponentData<LocationData>(m_Entity);
+                    data = em.GetComponentData<LocationData>(m_Entity);
                 m_p338023941 = value;
                 data.Transform = transform;
                 if (dataActive)
-                    m_EntityManager.SetComponentData(m_Entity, data);
+                    em.SetComponentData(m_Entity, data);
 
                 Position = value.position;
                 Forward = value.forward;
@@ -43,22 +44,24 @@ namespace Generated.Semantic.Traits
         {
             get
             {
-                if (m_EntityManager != default && m_EntityManager.HasComponent<LocationData>(m_Entity))
+                var em = SemanticObject.EntityManager;
+                if (em.HasComponent<LocationData>(m_Entity))
                 {
-                    m_p2084774077 = m_EntityManager.GetComponentData<LocationData>(m_Entity).Position;
+                    m_p2084774077 = em.GetComponentData<LocationData>(m_Entity).Position;
                 }
 
                 return m_p2084774077;
             }
             set
             {
+                var em = SemanticObject.EntityManager;
                 LocationData data = default;
-                var dataActive = m_EntityManager != default && m_EntityManager.HasComponent<LocationData>(m_Entity);
+                var dataActive = em.HasComponent<LocationData>(m_Entity);
                 if (dataActive)
-                    data = m_EntityManager.GetComponentData<LocationData>(m_Entity);
+                    data = em.GetComponentData<LocationData>(m_Entity);
                 Transform.position = data.Position = m_p2084774077 = value;
                 if (dataActive)
-                    m_EntityManager.SetComponentData(m_Entity, data);
+                    em.SetComponentData(m_Entity, data);
             }
         }
 
@@ -69,22 +72,24 @@ namespace Generated.Semantic.Traits
         {
             get
             {
-                if (m_EntityManager != default && m_EntityManager.HasComponent<LocationData>(m_Entity))
+                var em = SemanticObject.EntityManager;
+                if (em.HasComponent<LocationData>(m_Entity))
                 {
-                    m_p2006904664 = m_EntityManager.GetComponentData<LocationData>(m_Entity).Forward;
+                    m_p2006904664 = em.GetComponentData<LocationData>(m_Entity).Forward;
                 }
 
                 return m_p2006904664;
             }
             set
             {
+                var em = SemanticObject.EntityManager;
                 LocationData data = default;
-                var dataActive = m_EntityManager != default && m_EntityManager.HasComponent<LocationData>(m_Entity);
+                var dataActive = em.HasComponent<LocationData>(m_Entity);
                 if (dataActive)
-                    data = m_EntityManager.GetComponentData<LocationData>(m_Entity);
+                    data = em.GetComponentData<LocationData>(m_Entity);
                 Transform.forward = data.Forward = m_p2006904664 = value;
                 if (dataActive)
-                    m_EntityManager.SetComponentData(m_Entity, data);
+                    em.SetComponentData(m_Entity, data);
             }
         }
 
@@ -93,12 +98,17 @@ namespace Generated.Semantic.Traits
         /// </summary>
         public LocationData Data
         {
-            get => m_World != null && m_World.IsCreated && m_EntityManager != default && m_EntityManager.HasComponent<LocationData>(m_Entity)
-                ? m_EntityManager.GetComponentData<LocationData>(m_Entity) : GetData();
+            get => SemanticObject.World is { IsCreated: true } &&
+                   SemanticObject.World.EntityManager.HasComponent<LocationData>(m_Entity)
+                ? SemanticObject.World.EntityManager.GetComponentData<LocationData>(m_Entity)
+                : GetData();
             set
             {
-                if (m_World != null && m_World.IsCreated && m_EntityManager != default && m_EntityManager.HasComponent<LocationData>(m_Entity))
-                    m_EntityManager.SetComponentData(m_Entity, value);
+                if (SemanticObject.World is { IsCreated: true } &&
+                    SemanticObject.World.EntityManager.HasComponent<LocationData>(m_Entity))
+                {
+                    SemanticObject.World.EntityManager.SetComponentData(m_Entity, value);
+                }
             }
         }
 
@@ -114,8 +124,6 @@ namespace Generated.Semantic.Traits
         UnityEngine.Vector3 m_p2006904664 = default;
 #pragma warning restore 649
 
-        EntityManager m_EntityManager;
-        World m_World;
         Entity m_Entity;
 
         LocationData GetData()
@@ -127,15 +135,32 @@ namespace Generated.Semantic.Traits
         }
 
 
-        void OnEnable()
+        private void Start()
         {
-            //TODO: this throws all kinds of errors when play mode options are enabled
+#warning this throws all kinds of errors when play mode options are enabled
+            if (GetComponent<RuntimeConvertTraits>() == null)
+            {
+                return;
+            }
+
             // Handle the case where this trait is added after conversion
             var semanticObject = GetComponent<SemanticObject>();
-            if (semanticObject && !semanticObject.Entity.Equals(default))
-                Convert(semanticObject.Entity, semanticObject.EntityManager, null);
+            if (semanticObject && semanticObject.Entity != Entity.Null)
+            {
+                RuntimeConvert(semanticObject.Entity, SemanticObject.EntityManager);
+            }
 
             Transform = gameObject.transform;
+        }
+
+        public void RuntimeConvert(Entity entity, EntityManager destinationManager)
+        {
+            m_Entity = entity;
+
+            if (!destinationManager.HasComponent(entity, typeof(LocationData)))
+            {
+                destinationManager.AddComponentData(entity, GetData());
+            }
         }
 
         /// <summary>
@@ -146,27 +171,23 @@ namespace Generated.Semantic.Traits
         /// <param name="_">An unused GameObjectConversionSystem parameter, needed for IConvertGameObjectToEntity.</param>
         public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
         {
-            m_Entity = entity;
-            m_EntityManager = destinationManager;
-            m_World = destinationManager.World;
-
-            if (!destinationManager.HasComponent(entity, typeof(LocationData)))
-            {
-                destinationManager.AddComponentData(entity, GetData());
-            }
+            destinationManager.AddComponentData(entity, GetData());
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
-            if (m_World != default && m_World.IsCreated)
+            if (SemanticObject.World is { IsCreated: true })
             {
-                m_EntityManager.RemoveComponent<LocationData>(m_Entity);
-                if (m_EntityManager.GetComponentCount(m_Entity) == 0)
-                    m_EntityManager.DestroyEntity(m_Entity);
+                var em = SemanticObject.EntityManager;
+                em.RemoveComponent<LocationData>(m_Entity);
+                if (em.GetComponentCount(m_Entity) == 0)
+                {
+                    em.DestroyEntity(m_Entity);
+                }
             }
         }
 
-        void OnValidate()
+        private void OnValidate()
         {
 
             // Commit local fields to backing store

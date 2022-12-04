@@ -43,10 +43,10 @@ namespace Unity.Semantic.Traits.Queries.Tests.Unit
         [UnityTest]
         public IEnumerator DistanceFilterReturnsSubset()
         {
-            while (m_SemanticObject.EntityManager == default)
+            while (SemanticObject.EntityManager == default)
                 yield return null;
 
-            var entityManager = m_SemanticObject.EntityManager;
+            var entityManager = SemanticObject.EntityManager;
             using (var query = new TraitQuery(entityManager).WithFilter(new DistanceFilter { Radius = 5f }))
             using (var entityQuery = entityManager.CreateEntityQuery(typeof(SemanticObjectData)))
             {
@@ -59,10 +59,10 @@ namespace Unity.Semantic.Traits.Queries.Tests.Unit
         [UnityTest]
         public IEnumerator DistanceFilterReturnsNone()
         {
-            while (m_SemanticObject.EntityManager == default)
+            while (SemanticObject.EntityManager == default)
                 yield return null;
 
-            var entityManager = m_SemanticObject.EntityManager;
+            var entityManager = SemanticObject.EntityManager;
             using (var query = new TraitQuery(entityManager).WithFilter(new DistanceFilter { Radius = 1f }))
             using (var entityQuery = entityManager.CreateEntityQuery(typeof(SemanticObjectData)))
             {
@@ -74,10 +74,10 @@ namespace Unity.Semantic.Traits.Queries.Tests.Unit
         [UnityTest]
         public IEnumerator SpecificSemanticObjectFilterReturnsSubset()
         {
-            while (m_SemanticObject.EntityManager == default)
+            while (SemanticObject.EntityManager == default)
                 yield return null;
 
-            var entityManager = m_SemanticObject.EntityManager;
+            var entityManager = SemanticObject.EntityManager;
             using (var query = new TraitQuery(entityManager).WithFilter(new SpecificSemanticObjectFilter() { ReferenceObject = m_SemanticObject }))
             using (var entityQuery = entityManager.CreateEntityQuery(typeof(SemanticObjectData)))
             {

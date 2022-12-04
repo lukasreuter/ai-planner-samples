@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace {{ namespace }}
 {
-    [ExecuteAlways]
     [DisallowMultipleComponent]
     [AddComponentMenu("Semantic/Traits/{{ name }} (Trait)")]
     [RequireComponent(typeof(SemanticObject))]
@@ -22,21 +21,22 @@ namespace {{ namespace }}
         {
             get
             {
-                if (m_EntityManager != default && m_EntityManager.HasComponent<{{ name }}Data>(m_Entity))
+                var em = SemanticObject.EntityManager;
+                if (em.HasComponent<{{ name }}Data>(m_Entity))
                 {
                 {{- if field.field_type | string.contains "GameObject" }}
-                    var data = m_EntityManager.GetComponentData<{{ name }}Data>(m_Entity);
+                    var data = em.GetComponentData<{{ name }}Data>(m_Entity);
                     if (data.{{ field.field_name }} != default)
-                        m_p{{ field.field_id }} = m_EntityManager.GetComponentObject<Transform>(data.{{ field.field_name }}).gameObject;
+                        m_p{{ field.field_id }} = em.GetComponentObject<Transform>(data.{{ field.field_name }}).gameObject;
                 {{- else if field.field_type | string.contains "System.String" }}
-                    m_p{{ field.field_id }} = m_EntityManager.GetComponentData<{{ name }}Data>(m_Entity).{{ field.field_name }}.ToString();
+                    m_p{{ field.field_id }} = em.GetComponentData<{{ name }}Data>(m_Entity).{{ field.field_name }}.ToString();
                 {{- else if field.field_type | string.contains "List" }}
                     m_p{{ field.field_id }}.Clear();
-                    var values = m_EntityManager.GetComponentData<{{ name }}Data>(m_Entity).{{ field.field_name }};
+                    var values = em.GetComponentData<{{ name }}Data>(m_Entity).{{ field.field_name }};
                     foreach (var v in values)
                         m_p{{ field.field_id }}.Add(v);
                 {{- else }}
-                    m_p{{ field.field_id }} = m_EntityManager.GetComponentData<{{ name }}Data>(m_Entity).{{ field.field_name }};
+                    m_p{{ field.field_id }} = em.GetComponentData<{{ name }}Data>(m_Entity).{{ field.field_name }};
                 {{- end }}
                 }
 
@@ -44,10 +44,11 @@ namespace {{ namespace }}
             }
             set
             {
+                var em = SemanticObject.EntityManager;
                 {{ name }}Data data = default;
-                var dataActive = m_EntityManager != default && m_EntityManager.HasComponent<{{ name }}Data>(m_Entity);
+                var dataActive = em.HasComponent<{{ name }}Data>(m_Entity);
                 if (dataActive)
-                    data = m_EntityManager.GetComponentData<{{ name }}Data>(m_Entity);
+                    data = em.GetComponentData<{{ name }}Data>(m_Entity);
                 {{- if field.field_type | string.contains "GameObject" }}
                 Entity entity = default;
                 if (value != null)
@@ -68,7 +69,7 @@ namespace {{ namespace }}
                 data.{{ field.field_name }} = m_p{{ field.field_id }} = value;
                 {{- end }}
                 if (dataActive)
-                    m_EntityManager.SetComponentData(m_Entity, data);
+                    em.SetComponentData(m_Entity, data);
             }
         }
         {{- end }}
@@ -76,12 +77,17 @@ namespace {{ namespace }}
         {{- if !fields.empty? }}
         public {{ name }}Data Data
         {
-            get => m_EntityManager != default && m_EntityManager.HasComponent<{{ name }}Data>(m_Entity) ?
-                m_EntityManager.GetComponentData<{{ name }}Data>(m_Entity) : GetData();
+            get => SemanticObject.World is { IsCreated: true } &&
+                   SemanticObject.World.EntityManager.HasComponent<{{ name }}Data>(m_Entity)
+               ? SemanticObject.World.EntityManager.GetComponentData<{{ name }}Data>(m_Entity)
+               : GetData();
             set
             {
-                if (m_EntityManager != default && m_EntityManager.HasComponent<{{ name }}Data>(m_Entity))
-                    m_EntityManager.SetComponentData(m_Entity, value);
+                if (SemanticObject.World is { IsCreated: true } &&
+                    SemanticObject.World.EntityManager.HasComponent<{{ name }}Data>(m_Entity))
+                {
+                    SemanticObject.World.EntityManager.SetComponentData(m_Entity, value);
+                }
             }
         }
 
@@ -102,8 +108,6 @@ namespace {{ namespace }}
         #pragma warning restore 649
         {{- end }}
 
-        EntityManager m_EntityManager;
-        World m_World;
         Entity m_Entity;
 
         {{ if !fields.empty? -}}
@@ -150,19 +154,24 @@ namespace {{ namespace }}
         {{- end }}
         {{- end ~}}
 
-        void OnEnable()
+        private void Start()
         {
+            if (GetComponent<RuntimeConvertTraits>() == null)
+            {
+                return;
+            }
+
             // Handle the case where this trait is added after conversion
             var semanticObject = GetComponent<SemanticObject>();
-            if (semanticObject && !semanticObject.Entity.Equals(default))
-                Convert(semanticObject.Entity, semanticObject.EntityManager, null);
+            if (semanticObject && semanticObject.Entity != Entity.Null)
+            {
+                RuntimeConvert(semanticObject.Entity, SemanticObject.EntityManager);
+            }
         }
 
-        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
+        public void RuntimeConvert(Entity entity, EntityManager destinationManager)
         {
             m_Entity = entity;
-            m_EntityManager = destinationManager;
-            m_World = destinationManager.World;
 
             if (!destinationManager.HasComponent(entity, typeof({{ name }}Data)))
             {
@@ -177,18 +186,33 @@ namespace {{ namespace }}
             }
         }
 
-        void OnDestroy()
+        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
         {
-            if (m_World != default && m_World.IsCreated)
+            {{- if fields.empty? }}
+            destinationManager.AddComponent<{{ name }}Data>(entity);
+            {{- else }}
+            destinationManager.AddComponentData(entity, GetData());
+            {{- if $has_relations }}
+            StartCoroutine(UpdateRelations());
+            {{- end }}
+            {{- end }}
+        }
+
+        private void OnDestroy()
+        {
+            if (SemanticObject.World is { IsCreated: true })
             {
-                m_EntityManager.RemoveComponent<{{ name }}Data>(m_Entity);
-                if (m_EntityManager.GetComponentCount(m_Entity) == 0)
-                    m_EntityManager.DestroyEntity(m_Entity);
+                var em = SemanticObject.EntityManager;
+                em.RemoveComponent<{{ name }}Data>(m_Entity);
+                if (em.GetComponentCount(m_Entity) == 0)
+                {
+                    em.DestroyEntity(m_Entity);
+                }
             }
         }
 
         {{ if !fields.empty? -}}
-        void OnValidate()
+        private void OnValidate()
         {
             {{- for field in fields }}
             {{- if field.field_type | string.contains "List" }}

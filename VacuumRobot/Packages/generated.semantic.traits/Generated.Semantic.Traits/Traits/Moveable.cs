@@ -7,31 +7,33 @@ using UnityEngine;
 
 namespace Generated.Semantic.Traits
 {
-    [ExecuteAlways]
     [DisallowMultipleComponent]
     [AddComponentMenu("Semantic/Traits/Moveable (Trait)")]
     [RequireComponent(typeof(SemanticObject))]
     public partial class Moveable : MonoBehaviour, ITrait
     {
 
-        EntityManager m_EntityManager;
-        World m_World;
         Entity m_Entity;
 
         
-        void OnEnable()
+        private void Start()
         {
+            if (GetComponent<RuntimeConvertTraits>() == null)
+            {
+                return;
+            }
+
             // Handle the case where this trait is added after conversion
             var semanticObject = GetComponent<SemanticObject>();
-            if (semanticObject && !semanticObject.Entity.Equals(default))
-                Convert(semanticObject.Entity, semanticObject.EntityManager, null);
+            if (semanticObject && semanticObject.Entity != Entity.Null)
+            {
+                RuntimeConvert(semanticObject.Entity, SemanticObject.EntityManager);
+            }
         }
 
-        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
+        public void RuntimeConvert(Entity entity, EntityManager destinationManager)
         {
             m_Entity = entity;
-            m_EntityManager = destinationManager;
-            m_World = destinationManager.World;
 
             if (!destinationManager.HasComponent(entity, typeof(MoveableData)))
             {
@@ -39,13 +41,21 @@ namespace Generated.Semantic.Traits
             }
         }
 
-        void OnDestroy()
+        public void Convert(Entity entity, EntityManager destinationManager, GameObjectConversionSystem _)
         {
-            if (m_World != default && m_World.IsCreated)
+            destinationManager.AddComponent<MoveableData>(entity);
+        }
+
+        private void OnDestroy()
+        {
+            if (SemanticObject.World is { IsCreated: true })
             {
-                m_EntityManager.RemoveComponent<MoveableData>(m_Entity);
-                if (m_EntityManager.GetComponentCount(m_Entity) == 0)
-                    m_EntityManager.DestroyEntity(m_Entity);
+                var em = SemanticObject.EntityManager;
+                em.RemoveComponent<MoveableData>(m_Entity);
+                if (em.GetComponentCount(m_Entity) == 0)
+                {
+                    em.DestroyEntity(m_Entity);
+                }
             }
         }
 

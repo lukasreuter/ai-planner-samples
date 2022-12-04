@@ -1,6 +1,7 @@
 {
     "name": "Unity.Semantic.Traits",
     "references": [
+        "Unity.Burst",
         "Unity.Entities",
         "Unity.Transforms",
         "Unity.Entities.Hybrid",
