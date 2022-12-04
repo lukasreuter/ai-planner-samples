@@ -38,7 +38,7 @@ namespace VacuumGame
 
             while (m_Target != null && !IsTargetReachable())
             {
-                transform.position = Vector3.Lerp(transform.position, m_Target.transform.position, 0.1f);
+                transform.position = Vector3.Lerp(transform.position, m_Target.transform.position, 0.05f);
                 transform.LookAt(m_Target.transform.position);
                 yield return null;
             }
