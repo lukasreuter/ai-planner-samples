@@ -137,7 +137,6 @@ namespace Generated.Semantic.Traits
 
         private void Start()
         {
-#warning this throws all kinds of errors when play mode options are enabled
             if (GetComponent<RuntimeConvertTraits>() == null)
             {
                 return;
