@@ -16,21 +16,15 @@ namespace Unity.Semantic.Traits.Queries.Tests.Unit
         [SetUp]
         public void Setup()
         {
-            var gameObject = new GameObject("TBO", typeof(SemanticObject))
+            var gameObject = new GameObject("TBO", typeof(SemanticObject), typeof(RuntimeConvertTraits))
             {
-                transform =
-                {
-                    position = Vector3.forward * 5f,
-                },
+                transform = { position = Vector3.forward * 5f },
             };
             m_SemanticObject = gameObject.GetComponent<SemanticObject>();
 
-            var otherGameObject = new GameObject("OtherTBO", typeof(SemanticObject))
+            var otherGameObject = new GameObject("OtherTBO", typeof(SemanticObject), typeof(RuntimeConvertTraits))
             {
-                transform =
-                {
-                    position = Vector3.forward * 10f,
-                },
+                transform = { position = Vector3.forward * 10f },
             };
             m_OtherSemanticObject = otherGameObject.GetComponent<SemanticObject>();
 
@@ -98,7 +92,10 @@ namespace Unity.Semantic.Traits.Queries.Tests.Unit
             }
 
             var entityManager = SemanticObject.EntityManager;
-            using var query = new TraitQuery(entityManager).WithFilter(new SpecificSemanticObjectFilter { ReferenceObject = m_SemanticObject });
+            using var query = new TraitQuery(entityManager).WithFilter(new SpecificSemanticObjectFilter
+            {
+                ReferenceObject = m_SemanticObject,
+            });
             using var entityQuery = entityManager.CreateEntityQuery(typeof(SemanticObjectData));
 
             Assert.AreEqual(2, entityQuery.CalculateEntityCount());

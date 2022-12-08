@@ -28,7 +28,7 @@ namespace Unity.Semantic.Traits
 
     [DisallowMultipleComponent]
     [AddComponentMenu("DOTS/Runtime Convert Traits")]
-    internal class RuntimeConvertTraits : MonoBehaviour
+    public class RuntimeConvertTraits : MonoBehaviour
     {
     }
 }
