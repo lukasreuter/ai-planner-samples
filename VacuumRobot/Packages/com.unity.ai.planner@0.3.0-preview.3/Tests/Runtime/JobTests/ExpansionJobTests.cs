@@ -335,7 +335,7 @@ namespace Unity.AI.Planner.Tests.Performance
                 newStatesToDestroy.Dispose();
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(1.0, 6);
+            PerformanceUtility.AssertRange(0.2, 6);
         }
 
         [Performance, Test]
@@ -397,7 +397,7 @@ namespace Unity.AI.Planner.Tests.Performance
                 newStatesToDestroy.Dispose();
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(1.0, 6.25);
+            PerformanceUtility.AssertRange(0.2, 6.25);
         }
     }
 }

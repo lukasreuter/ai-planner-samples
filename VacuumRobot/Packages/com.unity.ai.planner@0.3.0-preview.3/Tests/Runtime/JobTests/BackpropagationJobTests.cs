@@ -716,7 +716,7 @@ namespace Unity.AI.Planner.Tests.Performance
                     planGraph = planGraph,
                     SelectedStates = m_SelectedStates,
                 };
-                backpropJob.Schedule().Complete();
+                backpropJob.Run();
                 Assert.IsTrue(planGraph.StateInfoLookup[0].CumulativeRewardEstimate.Approximately(new BoundedValue(1,1,1)));
             }).SetUp(() =>
             {
@@ -750,7 +750,7 @@ namespace Unity.AI.Planner.Tests.Performance
                 planGraph.Dispose();
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.4, 0.7);
+            PerformanceUtility.AssertRange(0.4, 0.75);
         }
 
         [Performance, Test]
@@ -851,7 +851,7 @@ namespace Unity.AI.Planner.Tests.Performance
             predecessorStates.Dispose();
             horizonStateList.Dispose();
 
-            PerformanceUtility.AssertRange(0.4, 0.7);
+            PerformanceUtility.AssertRange(0.2, 0.7);
         }
     }
 }

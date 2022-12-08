@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.AI.Planner.Traits;
@@ -9,6 +10,7 @@ namespace Generated.AI.Planner.StateRepresentation
     [Serializable]
     public struct Moveable : ITrait, IBufferElementData, IEquatable<Moveable>
     {
+        [UsedImplicitly]
         private byte dummy; // needed as empty buffer elements throw errors in the type manager
 
         public void SetField(string fieldName, object value)

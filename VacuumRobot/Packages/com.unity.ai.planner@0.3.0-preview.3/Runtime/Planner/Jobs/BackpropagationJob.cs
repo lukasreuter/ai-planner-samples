@@ -23,8 +23,8 @@ namespace Unity.AI.Planner.Jobs
         Parallel
     }
 
-    [BurstCompile]
-    struct BackpropagationJob<TStateKey, TActionKey> : IJob
+    [BurstCompile(OptimizeFor = OptimizeFor.Performance, FloatMode = FloatMode.Fast)]
+    internal struct BackpropagationJob<TStateKey, TActionKey> : IJob
         where TStateKey : unmanaged, IEquatable<TStateKey>
         where TActionKey : unmanaged, IEquatable<TActionKey>
     {

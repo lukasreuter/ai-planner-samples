@@ -272,6 +272,7 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
         }
     }
 
+    [BurstCompile]
     public struct StateData : ITraitBasedStateData<TraitBasedObject, StateData>
     {
         public Entity StateEntity;
@@ -747,25 +748,42 @@ namespace Generated.AI.Planner.StateRepresentation.Clean
 
         public bool Equals(IStateData other) => other is StateData otherData && Equals(otherData);
 
-        public bool Equals(StateData rhsState)
+        [BurstCompile(FloatPrecision.Standard, FloatMode.Fast, OptimizeFor = OptimizeFor.Performance)]
+        private static unsafe bool Equals(StateData* lhsState, StateData* rhsState)
         {
-            if (StateEntity == rhsState.StateEntity)
+            ref var lhs = ref UnsafeUtility.AsRef<StateData>(lhsState);
+            ref var rhs = ref UnsafeUtility.AsRef<StateData>(rhsState);
+
+            if (lhs.StateEntity == rhs.StateEntity)
+            {
                 return true;
+            }
 
             // Easy check is to make sure each state has the same number of trait-based objects
-            if (TraitBasedObjects.Length != rhsState.TraitBasedObjects.Length
-                || RobotBuffer.Length != rhsState.RobotBuffer.Length
-                || LocationBuffer.Length != rhsState.LocationBuffer.Length
-                || DirtBuffer.Length != rhsState.DirtBuffer.Length
-                || MoveableBuffer.Length != rhsState.MoveableBuffer.Length
-                || PlanningAgentBuffer.Length != rhsState.PlanningAgentBuffer.Length)
+            if (lhs.TraitBasedObjects.Length != rhs.TraitBasedObjects.Length
+                || lhs.RobotBuffer.Length != rhs.RobotBuffer.Length
+                || lhs.LocationBuffer.Length != rhs.LocationBuffer.Length
+                || lhs.DirtBuffer.Length != rhs.DirtBuffer.Length
+                || lhs.MoveableBuffer.Length != rhs.MoveableBuffer.Length
+                || lhs.PlanningAgentBuffer.Length != rhs.PlanningAgentBuffer.Length)
+            {
                 return false;
+            }
 
-            var objectMap = new ObjectCorrespondence(TraitBasedObjectIds.Length, Allocator.Temp);
-            bool statesEqual = TryGetObjectMapping(rhsState, objectMap);
-            objectMap.Dispose();
+            using var objectMap = new ObjectCorrespondence(lhs.TraitBasedObjectIds, rhs.TraitBasedObjectIds, Allocator.Temp);
+            bool statesEqual = lhs.TryGetObjectMapping(rhs, objectMap);
 
             return statesEqual;
+        }
+
+        public bool Equals(StateData rhsState)
+        {
+            unsafe
+            {
+                StateData* lhs = (StateData*) UnsafeUtility.AddressOf(ref this);
+                StateData* rhs = (StateData*) UnsafeUtility.AddressOf(ref rhsState);
+                return Equals(lhs, rhs);
+            }
         }
 
         bool ITraitBasedStateData<TraitBasedObject, StateData>.TryGetObjectMapping(StateData rhsState, ObjectCorrespondence objectMap)

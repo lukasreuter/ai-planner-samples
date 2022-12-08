@@ -11,7 +11,7 @@ namespace Unity.AI.Planner.Traits
         public ObjectId Right;
     }
 
-    struct ObjectCorrespondence
+    struct ObjectCorrespondence : IDisposable
     {
         [NativeDisableContainerSafetyRestriction] NativeParallelHashMap<ObjectId, byte> m_RightIds;
         [NativeDisableContainerSafetyRestriction] NativeParallelHashMap<ObjectId, ObjectId> m_Matches;

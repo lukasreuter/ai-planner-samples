@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.AI.Planner.Traits;
@@ -13,6 +14,7 @@ namespace {{ namespace }}
     public struct {{ name }} : ITrait, IBufferElementData, IEquatable<{{ name }}>
     {
         {{- if fields.empty? }}
+        [UsedImplicitly]
         private byte dummy; // needed as empty buffer elements throw errors in the type manager
         {{- end }}
 

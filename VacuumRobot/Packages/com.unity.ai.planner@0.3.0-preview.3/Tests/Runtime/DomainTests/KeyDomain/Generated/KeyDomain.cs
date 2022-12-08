@@ -4,6 +4,7 @@ using System.Text;
 using Unity.AI.Planner;
 using Unity.AI.Planner.Traits;
 using Unity.AI.Planner.Jobs;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
@@ -310,6 +311,7 @@ namespace KeyDomain
         }
     }
 
+    [BurstCompile]
     struct StateData : ITraitBasedStateData<TraitBasedObject, StateData>
     {
         public Entity StateEntity;
@@ -808,27 +810,40 @@ namespace KeyDomain
 
         public bool Equals(IStateData other) => other is StateData otherData && Equals(otherData);
 
-        public bool Equals(StateData rhsState)
+        [BurstCompile(FloatPrecision.Standard, FloatMode.Fast, OptimizeFor = OptimizeFor.Performance)]
+        private static unsafe bool Equals(StateData* lhsState, StateData* rhsState)
         {
-            if (StateEntity == rhsState.StateEntity)
+            ref var lhs = ref UnsafeUtility.AsRef<StateData>(lhsState);
+            ref var rhs = ref UnsafeUtility.AsRef<StateData>(rhsState);
+
+            if (lhs.StateEntity == rhs.StateEntity)
                 return true;
 
             // Easy check is to make sure each state has the same number of domain objects
-            if (TraitBasedObjects.Length != rhsState.TraitBasedObjects.Length
-                || ColoredBuffer.Length != rhsState.ColoredBuffer.Length
-                || CarrierBuffer.Length != rhsState.CarrierBuffer.Length
-                || CarriableBuffer.Length != rhsState.CarriableBuffer.Length
-                || LocalizedBuffer.Length != rhsState.LocalizedBuffer.Length
-                || LockableBuffer.Length != rhsState.LockableBuffer.Length
-                || EndBuffer.Length != rhsState.EndBuffer.Length )
+            if (lhs.TraitBasedObjects.Length != rhs.TraitBasedObjects.Length
+                || lhs.ColoredBuffer.Length != rhs.ColoredBuffer.Length
+                || lhs.CarrierBuffer.Length != rhs.CarrierBuffer.Length
+                || lhs.CarriableBuffer.Length != rhs.CarriableBuffer.Length
+                || lhs.LocalizedBuffer.Length != rhs.LocalizedBuffer.Length
+                || lhs.LockableBuffer.Length != rhs.LockableBuffer.Length
+                || lhs.EndBuffer.Length != rhs.EndBuffer.Length )
                 return false;
 
             // New below
-            var objectMap = new ObjectCorrespondence(TraitBasedObjectIds, rhsState.TraitBasedObjectIds, Allocator.Temp);
-            var statesEqual = TryGetObjectMapping(rhsState, objectMap);
-            objectMap.Dispose();
+            using var objectMap = new ObjectCorrespondence(lhs.TraitBasedObjectIds, rhs.TraitBasedObjectIds, Allocator.Temp);
+            var statesEqual = lhs.TryGetObjectMapping(rhs, objectMap);
 
             return statesEqual;
+        }
+
+        public bool Equals(StateData rhsState)
+        {
+            unsafe
+            {
+                StateData* lhs = (StateData*) UnsafeUtility.AddressOf(ref this);
+                StateData* rhs = (StateData*) UnsafeUtility.AddressOf(ref rhsState);
+                return Equals(lhs, rhs);
+            }
         }
 
         bool ObjectsMatchAttributes(TraitBasedObject traitBasedObjectLHS, TraitBasedObject traitBasedObjectRHS, StateData rhsState)
