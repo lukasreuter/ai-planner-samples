@@ -38,3 +38,5 @@ sysinfo.txt
 *.DotSettings
 VacuumRobot/Logs
 .DS_Store
+*.dwlt
+VacuumRobot/UserSettings/EditorUserSettings.asset
