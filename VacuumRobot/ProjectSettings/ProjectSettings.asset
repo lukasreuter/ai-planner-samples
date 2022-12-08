@@ -612,7 +612,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: ENABLE_PERFORMANCE_TESTS;USE_IMPROVED_DATAMODE
+    Standalone: ENABLE_PERFORMANCE_TESTS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
