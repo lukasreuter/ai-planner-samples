@@ -193,7 +193,7 @@ namespace {{ namespace }}
                 {{- if fields.empty? }}
                 AddComponent<{{ name }}Data>();
                 {{- else }}
-                AddComponentData(entity, GetData());
+                AddComponent(authoring.GetData());
                 {{- if $has_relations }}
                 StartCoroutine(UpdateRelations());
                 {{- end }}
