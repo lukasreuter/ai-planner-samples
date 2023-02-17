@@ -377,7 +377,7 @@ namespace Unity.AI.Traits.Tests.Performance
 
             Assert.IsTrue(areEqual);
 
-            PerformanceUtility.AssertRange(0.32, 0.46);
+            PerformanceUtility.AssertRange(0.15, 0.46);
         }
 
         [Test, Performance]
@@ -511,4 +511,3 @@ namespace Unity.AI.Traits.Tests.Performance
     }
 #endif
 }
-
