@@ -4,7 +4,9 @@ namespace Unity.Collections
 {
     static class NativeMultiHashMapExtensions
     {
-        public static bool AddValueIfUnique<TKey, TValue>(this Unity.Collections.NativeMultiHashMap<TKey, TValue> hashMap, TKey key,
+        public static bool AddValueIfUnique<TKey, TValue>(
+            this NativeParallelMultiHashMap<TKey, TValue> hashMap,
+            TKey key,
             TValue value)
             where TKey : unmanaged, IEquatable<TKey>
             where TValue : unmanaged, IEquatable<TValue>

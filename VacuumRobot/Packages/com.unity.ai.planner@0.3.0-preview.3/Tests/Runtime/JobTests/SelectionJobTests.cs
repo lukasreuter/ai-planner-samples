@@ -26,7 +26,7 @@ namespace Unity.AI.Planner.Tests.Unit
         PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo> m_PlanGraph;
         PlanGraphBuilder<int,int> m_Builder;
         NativeList<int> m_SelectedUnexpandedStates;
-        NativeMultiHashMap<int, int> m_SelectedStateHorizons;
+        NativeParallelMultiHashMap<int, int> m_SelectedStateHorizons;
         NativeParallelHashMap<int, int> m_DepthMap;
 
         public SelectionJobTests(SelectionJobMode jobMode)
@@ -89,7 +89,7 @@ namespace Unity.AI.Planner.Tests.Unit
             var inputBudgets = new NativeList<int>(1, Allocator.TempJob);
             inputBudgets.Add(1);
 
-            var outputStateBudgets = new NativeMultiHashMap<int, int>(1, Allocator.TempJob);
+            var outputStateBudgets = new NativeParallelMultiHashMap<int, int>(1, Allocator.TempJob);
             var selectedUnexpanded = new NativeParallelHashMap<int, byte>(1, Allocator.TempJob);
 
             JobHandle jobHandle = default;
@@ -141,7 +141,7 @@ namespace Unity.AI.Planner.Tests.Unit
         public void SetupContainers()
         {
             m_SelectedUnexpandedStates = new NativeList<int>(1, Allocator.TempJob);
-            m_SelectedStateHorizons = new NativeMultiHashMap<int, int>(1, Allocator.TempJob);
+            m_SelectedStateHorizons = new NativeParallelMultiHashMap<int, int>(1, Allocator.TempJob);
             m_PlanGraph = new PlanGraph<int, StateInfo, int, ActionInfo, StateTransitionInfo>(1, 1, 1);
             m_Builder = new PlanGraphBuilder<int, int> { planGraph = m_PlanGraph };
         }
@@ -542,7 +542,7 @@ namespace Unity.AI.Planner.Tests.Performance
             planGraph.GetExpandedDepthMap(0, depthMap, queue);
 
             var selectedUnexpandedStates = new NativeList<int>(1, Allocator.Persistent);
-            var allExpandedStates = new NativeMultiHashMap<int, int>(1, Allocator.Persistent);
+            var allExpandedStates = new NativeParallelMultiHashMap<int, int>(1, Allocator.Persistent);
 
             yield return null;
 
@@ -596,7 +596,7 @@ namespace Unity.AI.Planner.Tests.Performance
             planGraph.GetExpandedDepthMap(0, depthMap, queue);
 
             var selectedUnexpandedStates = new NativeList<int>(1, Allocator.Persistent);
-            var allExpandedStates = new NativeMultiHashMap<int, int>(1, Allocator.Persistent);
+            var allExpandedStates = new NativeParallelMultiHashMap<int, int>(1, Allocator.Persistent);
 
             yield return null;
 
@@ -650,7 +650,7 @@ namespace Unity.AI.Planner.Tests.Performance
             planGraph.GetExpandedDepthMap(0, depthMap, queue);
 
             var selectedUnexpandedStates = new NativeList<int>(1, Allocator.Persistent);
-            var allExpandedStates = new NativeMultiHashMap<int, int>(1, Allocator.Persistent);
+            var allExpandedStates = new NativeParallelMultiHashMap<int, int>(1, Allocator.Persistent);
 
             yield return null;
 
@@ -712,8 +712,8 @@ namespace Unity.AI.Planner.Tests.Performance
             var inputBudgets = new NativeList<int>(size, Allocator.TempJob);
             inputBudgets.Add(budget);
 
-            var outputStateBudgets = new NativeMultiHashMap<int, int>(size, Allocator.TempJob);
-            var m_SelectedStateHorizons = new NativeMultiHashMap<int, int>(size, Allocator.TempJob);
+            var outputStateBudgets = new NativeParallelMultiHashMap<int, int>(size, Allocator.TempJob);
+            var m_SelectedStateHorizons = new NativeParallelMultiHashMap<int, int>(size, Allocator.TempJob);
             var m_SelectedUnexpandedStates = new NativeParallelHashMap<int, byte>(size, Allocator.TempJob);
 
             // Determine max number of job iterations
