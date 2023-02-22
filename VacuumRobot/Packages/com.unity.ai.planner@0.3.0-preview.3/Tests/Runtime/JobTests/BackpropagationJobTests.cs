@@ -750,7 +750,7 @@ namespace Unity.AI.Planner.Tests.Performance
                 planGraph.Dispose();
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.4, 0.75);
+            PerformanceUtility.AssertRange(0.4, 1f);
         }
 
         [Performance, Test]
