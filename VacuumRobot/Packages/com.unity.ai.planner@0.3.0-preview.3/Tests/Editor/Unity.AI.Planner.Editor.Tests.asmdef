@@ -3,6 +3,7 @@
     "references": [
         "Unity.AI.Planner",
         "Unity.AI.Planner.Editor",
+        "Unity.Collections",
         "Unity.Entities",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",

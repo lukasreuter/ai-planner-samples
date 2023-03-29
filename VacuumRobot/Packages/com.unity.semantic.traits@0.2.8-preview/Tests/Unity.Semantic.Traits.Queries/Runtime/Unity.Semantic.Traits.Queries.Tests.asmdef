@@ -3,6 +3,7 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
+        "Unity.Collections",
         "Unity.Entities",
         "Unity.Semantic.Traits.Queries",
         "Unity.Semantic.Traits"

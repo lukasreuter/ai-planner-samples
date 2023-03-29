@@ -5,6 +5,7 @@
         "Unity.Semantic.Traits.Queries",
         "Unity.Semantic.Traits",
         "Unity.Semantic.Traits.Editor",
+        "Unity.Collections",
         "Unity.Entities"
     ],
     "includePlatforms": [
