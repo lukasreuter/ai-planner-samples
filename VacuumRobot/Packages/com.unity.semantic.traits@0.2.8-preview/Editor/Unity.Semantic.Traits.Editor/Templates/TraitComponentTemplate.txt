@@ -190,10 +190,11 @@ namespace {{ namespace }}
         {
             public override void Bake({{ name }} authoring)
             {
+                var e = GetEntity(TransformUsageFlags.Dynamic);
                 {{- if fields.empty? }}
-                AddComponent<{{ name }}Data>();
+                AddComponent<{{ name }}Data>(e);
                 {{- else }}
-                AddComponent(authoring.GetData());
+                AddComponent(e, authoring.GetData());
                 {{- if $has_relations }}
                 StartCoroutine(UpdateRelations());
                 {{- end }}

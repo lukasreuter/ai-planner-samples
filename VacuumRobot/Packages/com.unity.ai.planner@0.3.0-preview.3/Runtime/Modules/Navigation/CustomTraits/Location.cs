@@ -170,7 +170,8 @@ namespace Generated.Semantic.Traits
         {
             public override void Bake(Location authoring)
             {
-                AddComponent(authoring.GetData());
+                var e = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(e, authoring.GetData());
             }
         }
 

@@ -45,7 +45,8 @@ namespace Generated.Semantic.Traits
         {
             public override void Bake(PlanningAgent authoring)
             {
-                AddComponent<PlanningAgentData>();
+                var e = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent<PlanningAgentData>(e);
             }
         }
 

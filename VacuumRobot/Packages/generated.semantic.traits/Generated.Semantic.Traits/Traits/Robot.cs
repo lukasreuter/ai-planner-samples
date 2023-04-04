@@ -45,7 +45,8 @@ namespace Generated.Semantic.Traits
         {
             public override void Bake(Robot authoring)
             {
-                AddComponent<RobotData>();
+                var e = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent<RobotData>(e);
             }
         }
 

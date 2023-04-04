@@ -45,7 +45,8 @@ namespace Generated.Semantic.Traits
         {
             public override void Bake(Moveable authoring)
             {
-                AddComponent<MoveableData>();
+                var e = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent<MoveableData>(e);
             }
         }
 

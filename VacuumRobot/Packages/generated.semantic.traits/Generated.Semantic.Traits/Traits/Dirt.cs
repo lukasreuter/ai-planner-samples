@@ -45,7 +45,8 @@ namespace Generated.Semantic.Traits
         {
             public override void Bake(Dirt authoring)
             {
-                AddComponent<DirtData>();
+                var e = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent<DirtData>(e);
             }
         }
 
