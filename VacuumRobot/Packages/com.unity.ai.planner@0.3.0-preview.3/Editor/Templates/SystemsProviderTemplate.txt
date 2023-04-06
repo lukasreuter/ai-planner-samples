@@ -7,9 +7,9 @@ using Unity.Jobs;
 using {{ state_representation_qualifier }}.{{ plan_name }};
 
 [assembly: RegisterGenericJobType(typeof(EvaluateNewStatesJob<StateEntityKey, StateData, StateDataContext,
-    {{ heuristic }}, {{namespace}}.TerminationEvaluator>))]
+    {{namespace}}.{{heuristic}}, {{namespace}}.TerminationEvaluator>))]
 [assembly: RegisterGenericJobType(typeof(PlannerScheduler<StateEntityKey, ActionKey, StateManager, StateData, StateDataContext,
-    {{namespace}}.ActionScheduler, {{ heuristic }}, {{namespace}}.TerminationEvaluator, DestroyStatesJobScheduler>.CopyPlanDataJob))]
+    {{namespace}}.ActionScheduler, {{namespace}}.{{heuristic}}, {{namespace}}.TerminationEvaluator, DestroyStatesJobScheduler>.CopyPlanDataJob))]
 
 namespace {{ namespace }}
 {
