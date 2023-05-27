@@ -2,6 +2,7 @@ using System;
 using Unity.AI.Planner;
 using Unity.AI.Planner.Traits;
 using Unity.AI.Planner.Jobs;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -10,6 +11,7 @@ using Generated.AI.Planner.StateRepresentation.Clean;
 
 namespace Generated.AI.Planner.Plans.Clean
 {
+    [BurstCompile]
     public struct ActionScheduler :
         ITraitBasedActionScheduler<TraitBasedObject, StateEntityKey, StateData, StateDataContext, StateManager, ActionKey>
     {
@@ -28,6 +30,7 @@ namespace Generated.AI.Planner.Plans.Clean
 
         NativeQueue<StateTransitionInfoPair<StateEntityKey, ActionKey, StateTransitionInfo>> m_CreatedStateInfo;
 
+        [BurstCompile]
         struct PlaybackECB : IJob
         {
             public ExclusiveEntityTransaction ExclusiveEntityTransaction;
