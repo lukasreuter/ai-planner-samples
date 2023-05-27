@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Unity.Entities;
+﻿using Unity.Entities;
 using UnityEngine;
 
 namespace Unity.Semantic.Traits
@@ -64,13 +63,14 @@ namespace Unity.Semantic.Traits
         {
             public override void Bake(SemanticObject authoring)
             {
+                var e = GetEntity(TransformUsageFlags.Dynamic);
                 DependsOn(authoring.gameObject);
-                AddComponent(new SemanticID
+                AddComponent(e, new SemanticID
                 {
                     instanceID = authoring.gameObject.GetInstanceID(),
                 });
-                AddComponent<SemanticObjectData>();
-                AddComponentObject(GetComponent<Transform>());
+                AddComponent<SemanticObjectData>(e);
+                AddComponentObject(e, GetComponent<Transform>());
             }
         }
 
