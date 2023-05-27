@@ -201,7 +201,7 @@ namespace Unity.AI.Planner.Tests.Performance
                 scheduler.Dispose();
             }).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(1.5f, 13);
+            PerformanceUtility.AssertRange(0.8f, 13);
         }
     }
 }

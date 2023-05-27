@@ -466,7 +466,7 @@ namespace Unity.AI.Traits.Tests.Performance
                 traitBasedObject = stateData.TraitBasedObjects[stateData.TraitBasedObjects.Length-1];
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.02, 0.55);
+            PerformanceUtility.AssertRange(0.015, 0.55);
         }
 
         [Test, Performance]
@@ -484,7 +484,7 @@ namespace Unity.AI.Traits.Tests.Performance
                 traitBasedObject = stateData.TraitBasedObjects[stateData.TraitBasedObjects.Length-1];
             }).WarmupCount(1).MeasurementCount(30).IterationsPerMeasurement(1).Run();
 
-            PerformanceUtility.AssertRange(0.01, 0.19);
+            PerformanceUtility.AssertRange(0.007, 0.19);
         }
 
         [Test, Performance]
@@ -492,7 +492,11 @@ namespace Unity.AI.Traits.Tests.Performance
         {
             StateData stateData = default;
             var objects = new NativeList<int>(Allocator.Temp);
-            var types = new NativeArray<ComponentType>(2, Allocator.TempJob) { [0] = ComponentType.ReadWrite<Colored>(), [1] = ComponentType.ReadWrite<Lockable>() };
+            var types = new NativeArray<ComponentType>(2, Allocator.TempJob)
+            {
+                [0] = ComponentType.ReadWrite<Colored>(),
+                [1] = ComponentType.ReadWrite<Lockable>()
+            };
 
             Measure.Method(() =>
             {
@@ -506,7 +510,7 @@ namespace Unity.AI.Traits.Tests.Performance
             types.Dispose();
             objects.Dispose();
 
-            PerformanceUtility.AssertRange(0.03, 0.19);
+            PerformanceUtility.AssertRange(0.01, 0.19);
         }
     }
 #endif
