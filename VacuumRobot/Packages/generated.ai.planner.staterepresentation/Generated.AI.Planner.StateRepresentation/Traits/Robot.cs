@@ -10,8 +10,10 @@ namespace Generated.AI.Planner.StateRepresentation
     [Serializable]
     public struct Robot : ITrait, IBufferElementData, IEquatable<Robot>
     {
+#pragma warning disable CS0169
         [UsedImplicitly]
         private byte dummy; // needed as empty buffer elements throw errors in the type manager
+#pragma warning restore CS0169
 
         public void SetField(string fieldName, object value)
         {
