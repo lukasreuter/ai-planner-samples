@@ -51,7 +51,7 @@ namespace Unity.Semantic.Traits.Queries
         {
             m_EntityManager = entityManager;
             m_Query = new TraitBasedObjectQuery();
-            m_QueryResults = new NativeList<Entity>(entityManager.EntityCapacity, Allocator.TempJob);
+            m_QueryResults = new NativeList<Entity>(1000, Allocator.TempJob);
             m_QueryCompleted = false;
             m_Version = 0;
             m_ValidVersion = new NativeArray<int>(1, Allocator.TempJob);
