@@ -196,7 +196,7 @@ namespace {{ namespace }}
                 {{- else }}
                 AddComponent(e, authoring.GetData());
                 {{- if $has_relations }}
-                StartCoroutine(UpdateRelations());
+                authoring.StartCoroutine(authoring.UpdateRelations());
                 {{- end }}
                 {{- end }}
             }
